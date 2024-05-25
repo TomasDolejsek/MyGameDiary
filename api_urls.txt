@@ -1,0 +1,2 @@
+https://id.twitch.tv/oauth2/token
+https://api.igdb.com/v4/
