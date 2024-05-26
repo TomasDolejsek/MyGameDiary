@@ -1,0 +1,38 @@
+<style>
+    li {margin-left: 2em;}
+</style>
+
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-2 mb-2">
+        <a class="navbar-brand text-light" href="#">MY GAME DIARY</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'games_app:game_list' %}">Game Database</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">Link</a>
+                </li>
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarPlayerContent">
+            <ul class="navbar-nav ms-auto">
+                {% if not user.is_authenticated %}
+                   <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'player_login' %}">Login</a> 
+                    </li>
+                {% else %}
+                    <span class="navbar-text text-white">
+                        Welcome, {{ user }}
+                    </span>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'games_app:game_list' %}">My Games</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'player_logout' %}">Logout</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>

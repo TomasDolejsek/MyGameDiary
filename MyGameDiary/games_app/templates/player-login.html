@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <div class = "row">
+        <div class="col">
+            <form action="." method="POST"> {% csrf_token %}
+                {{ form.as_p }}
+                <br>
+                <input type="submit" name="button-login" value="Login">
+            </form>
+        </div>
+    </div>
+{% endblock %}

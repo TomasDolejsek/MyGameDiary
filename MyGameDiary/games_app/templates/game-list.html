@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block title %}Game List{% endblock %}
+
+{% block content %}
+    <style>
+        .menu {font-size: 18px;
+               font-weight: bold; 
+               background-color: yellow;}
+    </style>
+    <div class="row menu m-2">
+        <div class="col-2 text-center">
+            Cover
+        </div>
+        <div class="col-3 text-center">
+            Title
+        </div>
+        <div class="col-1">
+            Year
+        </div>
+        <div class="col-3">
+            Genres
+        </div>
+    </div>
+    {% for game in games %}
+        <div class="row m-2">
+            <div class="col-2 text-center">
+                <img src="{{  game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100">
+            </div>
+            <div class="col-3 text-center">
+                {{ game.name }}
+            </div>
+            <div class="col-1">
+                {{ game.year }}
+            </div>
+            <div class="col-3">
+                {{ game.get_genres_names }}
+            </div>
+        </div>
+    {%  endfor  %}
+{% endblock %}
