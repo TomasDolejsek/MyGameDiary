@@ -12,7 +12,7 @@ access_token = getenv('ACCESS_TOKEN')
 
 
 """
-Getting games info from IGDB API (using Twitch authentication)
+Getting games_app info from IGDB API (using Twitch authentication)
 """
 
 api_url = 'https://api.igdb.com/v4/'

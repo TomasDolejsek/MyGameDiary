@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <h1>Register</h1>
+    <div class = "row">
+        <div class="col">
+            <form action="." method="POST"> {% csrf_token %}
+                {{ form.as_p }}
+                <br>
+                <input type="submit" name="button-register" value="Register">
+            </form>
+        </div>
+    </div>
+{% endblock %}

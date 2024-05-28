@@ -16,21 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from games_app.views import *
 from MyGameDiary.views import *
 
 urlpatterns = [
-    # homepage
-    path('', HomePageView.as_view(), name='homepage'),
-
-    # admin
     path('admin/', admin.site.urls),
+    path('', HomePageView.as_view(), name='homepage'),
+    path('session/', SessionView.as_view(), name='session_view'),
 
-    # player
-    path('login/', PlayerLoginView.as_view(), name='player_login'),
-    path('logout/', PlayerLogoutView.as_view(), name='player_logout'),
-
-    # games_app
+    # apps views
+    path('players/', include('players_app.urls', namespace='players_app')),
     path('games/', include('games_app.urls', namespace='games_app')),
 
 ]

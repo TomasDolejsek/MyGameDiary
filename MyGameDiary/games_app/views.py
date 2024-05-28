@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, TemplateView, FormView, RedirectView
+from django.views.generic import ListView, TemplateView
 
-from games_app.models import *
 from games_app.forms import *
 from games_app.api_utils import *
+from games_app.models import *
+from MyGameDiary.views import *
 
 
 class GameListView(ListView):
@@ -14,14 +15,22 @@ class GameListView(ListView):
     context_object_name = 'games'
 
 
-class GameAddView(TemplateView):
+class GameAddView(LoginRequiredMixin, UserRightsMixin, TemplateView):
     model = Game
     template_name = 'game-add.html'
     context_object_name = 'game'
+    login_url = reverse_lazy('user_login')
+    allowed_groups = ['Admin']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(self.get_context_rights())
+        return context
 
     def get(self, *args, **kwargs):
         form = GameSearchApiForm()
-        context = {'form': form}
+        context = self.get_context_data()
+        context.update({'form': form})
         return render(self.request,
                       template_name=self.template_name,
                       context=context)
@@ -35,15 +44,23 @@ class GameAddView(TemplateView):
             return HttpResponse('Bad data')
 
 
-class GameSaveView(TemplateView):
+class GameSaveView(LoginRequiredMixin, UserRightsMixin, TemplateView):
     template_name = 'game-add.html'
     context_object_name = 'games'
+    login_url = reverse_lazy('user_login')
+    allowed_groups = ['Admin']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(self.get_context_rights())
+        return context
 
     def get(self, *args, **kwargs):
         game_title = kwargs['game_title']
-        games = find_game_id(game_title)
-        context = {'game_title': game_title,
-                   'games': games}
+        context = self.get_context_data()
+        if context['user_has_rights']:
+            games = find_game_id(game_title)
+            context.update({'game_title': game_title, 'games': games})
         return render(self.request,
                       template_name=self.template_name,
                       context=context)

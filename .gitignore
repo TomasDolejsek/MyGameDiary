@@ -114,7 +114,7 @@ celerybeat.pid
 
 # Environments
 .mgd-env
-.env
+MyGameDiary/games_app/.env
 .venv
 env/
 venv/

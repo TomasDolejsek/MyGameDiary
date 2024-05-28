@@ -3,12 +3,9 @@
 {% load bootstrap5 %}
 
 {% block bootstrap5_content %}
+    {% include 'snippets/navbar.html' %}
     <div class="container">
-        {% include 'menu-header.html' %}
-
-        {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
-
+        {% autoescape on %}{% bootstrap_messages %}{% endautoescape %}
         {% block content %}(no content){% endblock %}
     </div>
-
 {% endblock %}

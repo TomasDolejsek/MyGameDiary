@@ -4,19 +4,23 @@
 {% block title %}Add a New Game{% endblock %}
 
 {% block content %}
-    {% if not games %}
-        <form action="." method="POST"> {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Search">
-        </form>
+    {% if user_has_rights %}
+        {% if not games %}
+            <form action="." method="POST"> {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Search">
+            </form>
+        {% else %}
+            <h5>Pick a game to save:</h5>
+            <form action="/games/game-add/{{ game_title }}" method="POST"> {% csrf_token %}
+                {% for game in games %}
+                    <input type="radio" id="{{ game.id }}" name="game_to_save" value="{{ game.id }},{{ game.name }}">
+                    <label for="{{ game.id }}">{{ game.id }} - {{ game.name }}</label><br>
+                {% endfor %}
+                <input type="submit" value="Save this game!">
+            </form>
+        {% endif %}
     {% else %}
-        <h5>Pick a game to save:</h5>
-        <form action="/games/game-add/{{ game_title }}" method="POST"> {% csrf_token %}
-            {% for game in games %}
-                <input type="radio" id="{{ game.id }}" name="game_to_save" value="{{ game.id }},{{ game.name }}">
-                <label for="{{ game.id }}">{{ game.id }} - {{ game.name }}</label><br>
-            {% endfor %}
-            <input type="submit" value="Save this game!">
-        </form>
+        {% include 'snippets/access-denied.html' %}
     {% endif %}
 {% endblock %}

@@ -1,5 +1,4 @@
 from django import forms
-from games_app.models import *
 
 
 class GameSearchApiForm(forms.Form):

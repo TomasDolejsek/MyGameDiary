@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # my apps
     'games_app',
+    'players_app',
 
 ]
 

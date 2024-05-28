@@ -27,3 +27,5 @@
 890,Syberia
 253,Stonekeep
 1161,Tomb Raider: Legend
+6185,Syberia II
+2419,Albion

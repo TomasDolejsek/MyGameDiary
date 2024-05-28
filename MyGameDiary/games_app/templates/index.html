@@ -6,7 +6,7 @@
     {% if user.is_authenticated %}
         Welcome back, {{ user }}!
     {% else %}
-        <a href="{%  url 'player_login' %}">Login</a>
+        <a href="{%  url 'players_app:user_login' %}">Login</a>
     {% endif %}
     
 {% endblock %}
