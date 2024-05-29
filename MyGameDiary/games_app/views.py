@@ -1,12 +1,14 @@
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView
 
-from games_app.forms import *
-from games_app.api_utils import *
-from games_app.models import *
-from MyGameDiary.views import *
+from games_app.forms import GameSearchApiForm
+from games_app.api_utils import find_game_id, save_game, save_to_file
+from games_app.models import Game
+from players_app.views import UserRightsMixin
 
 
 class GameListView(ListView):
@@ -19,7 +21,7 @@ class GameAddView(LoginRequiredMixin, UserRightsMixin, TemplateView):
     model = Game
     template_name = 'game-add.html'
     context_object_name = 'game'
-    login_url = reverse_lazy('user_login')
+    login_url = reverse_lazy('players_app:user_login')
     allowed_groups = ['Admin']
 
     def get_context_data(self, **kwargs):
@@ -47,7 +49,7 @@ class GameAddView(LoginRequiredMixin, UserRightsMixin, TemplateView):
 class GameSaveView(LoginRequiredMixin, UserRightsMixin, TemplateView):
     template_name = 'game-add.html'
     context_object_name = 'games'
-    login_url = reverse_lazy('user_login')
+    login_url = reverse_lazy('players_app:user_login')
     allowed_groups = ['Admin']
 
     def get_context_data(self, **kwargs):
@@ -70,4 +72,7 @@ class GameSaveView(LoginRequiredMixin, UserRightsMixin, TemplateView):
         game_id = game_to_save.split(',')[0]
         if save_game(game_id):
             save_to_file(game_to_save)
+            messages.success(self.request, 'Game successfully saved.')
+        else:
+            messages.error(self.request, 'Game is already in the database.')
         return redirect('games_app:game_list')

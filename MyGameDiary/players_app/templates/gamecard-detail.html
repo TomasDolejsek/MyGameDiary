@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <style>
+        .menu {font-size: 18px;
+               font-weight: bold; 
+               background-color: dodgerblue;}
+    </style>
+    <div class="row menu m-2">
+        <div class="col-1 text-center">
+            Cover
+        </div>
+        <div class="col-3 text-center">
+            Title
+        </div>
+        <div class="col-1 text-center">
+            Is finished
+        </div>
+        <div class="col-1 text-center">
+            Hours played
+        </div>
+        <div class="col-3 text-center">
+            Avatar names
+        </div>
+        <div class="col-3 text-center">
+            Notes
+        </div>
+    </div>
+    <div class="row m-2">
+        <div class="col-1 text-center">
+            <img src="{{  gamecard.game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100">
+        </div>
+        <div class="col-3 text-center">
+            {{ gamecard.game.name }}
+        </div>
+        <div class="col-1 text-center">
+            {{ gamecard.is_finished }}
+        </div>
+        <div class="col-1 text-center">
+            {{ gamecard.hours_played }}
+        </div>
+        <div class="col-3 text-center">
+            {{ gamecard.avatar_names }}
+        </div>
+        <div class="col-3 text-center">
+            {{ gamecard.notes }}
+        </div>
+    </div>
+{% endblock %}

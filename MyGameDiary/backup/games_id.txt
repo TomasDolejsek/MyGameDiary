@@ -19,3 +19,13 @@
 78,Dragon Age II
 1887,Dragon Age: Inquisition
 3092,The Lord of the Rings Online
+8752,Avernum: Escape from the Pit
+8802,Avernum 2: Crystal Souls
+65824,Avernum 3: Ruined World
+11156,Horizon Zero Dawn
+284,Wolfenstein 3D
+890,Syberia
+253,Stonekeep
+1161,Tomb Raider: Legend
+6185,Syberia II
+2419,Albion

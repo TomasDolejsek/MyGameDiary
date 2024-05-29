@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <style>
+        .menu {font-size: 18px;
+               font-weight: bold; 
+               background-color: dodgerblue;}
+    </style>
+    <div class="d-flex justify-content-around align-items-center">
+        <div class="d-flex justify content-around align-items-center">
+            <div>
+                <h2>{{ profile.user.username }}'s Game Portfolio</h2>
+            </div>
+            {% if profile.is_private %}
+                <div class="badge bg-danger text-white text-wrap mx-2">
+                    private portfolio
+                </div>
+            {% else %}
+                <div class="badge bg-success text-white text-wrap mx-2">
+                    public portfolio
+                </div>
+            {% endif %}
+        </div>
+        <div class="btn">
+            {% if profile.is_private %}
+                <a href="{% url 'players_app:portfolio_change_privacy' %}?profile_pk={{ profile.user.pk }}">Make Portfolio Public</a>
+            {% else %}
+                <a href="{% url 'players_app:portfolio_change_privacy' %}?profile_pk={{ profile.user.pk }}">Make Portfolio Private</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row menu m-2">
+        <div class="col-2 text-center">
+            Cover
+        </div>
+        <div class="col-3 text-center">
+            Title
+        </div>
+        <div class="col-5">
+            Actions
+        </div>
+    </div>
+    {% for gamecard in gamecards %}
+        <div class="row m-2">
+            <div class="col-2 text-center">
+                <img src="{{  gamecard.game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100">
+            </div>
+            <div class="col-3 text-center">
+                {{ gamecard.game.name }}
+            </div>
+            <div class="col-2">
+                <a href="{% url 'players_app:gamecard_detail' gamecard.pk %}">Detail</a>
+            </div>
+            <div class="col-3">
+                Tady bude update and remove.
+            </div>
+        </div>
+    {%  endfor  %}
+{% endblock %}

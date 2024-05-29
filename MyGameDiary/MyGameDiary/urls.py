@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from MyGameDiary.views import *
+from MyGameDiary.views import HomePageView, SessionView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,7 +24,6 @@ urlpatterns = [
     path('session/', SessionView.as_view(), name='session_view'),
 
     # apps views
-    path('players/', include('players_app.urls', namespace='players_app')),
     path('games/', include('games_app.urls', namespace='games_app')),
-
+    path('players/', include('players_app.urls', namespace='players_app')),
 ]

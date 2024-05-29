@@ -1,7 +1,7 @@
 import requests
 from dotenv import load_dotenv
 from os import getenv
-from games_app.models import *
+from games_app.models import Game, Genre
 
 
 # Environmental variables

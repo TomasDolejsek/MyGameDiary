@@ -1,7 +1,8 @@
+from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group
 
-from players_app.models import Portfolio
+from players_app.models import Profile, GameCard
 
 
 class PlayerRegistrationForm(UserCreationForm):
@@ -13,6 +14,12 @@ class PlayerRegistrationForm(UserCreationForm):
             player_group = Group.objects.get(name='Player')
             user.groups.add(player_group)
             user.save()
-            portfolio = Portfolio.objects.create(user=user)
-            portfolio.save()
+            profile = Profile.objects.create(user=user)
+            profile.save()
             return user
+
+
+class GameCardForm(ModelForm):
+    class Meta:
+        model = GameCard
+        fields = '__all__'

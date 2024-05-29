@@ -12,7 +12,7 @@
                 </li>
                 <li class="nav-item">
                     {% if user.is_authenticated %}
-                        {% if user.is_superuser %}
+                        {% if user.profile.is_admin %}
                             <a class="nav-link text-white" href="{% url 'games_app:game_add' %}">Add a New Game</a>
                         {% else %}
                             <a class="nav-link text-white" href="#">Request a Game!</a>
@@ -36,7 +36,7 @@
                         Welcome, {{ user }}
                     </span>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'games_app:game_list' %}">My Games</a>
+                        <a class="nav-link text-white" href="{% url 'players_app:portfolio' user.profile.pk %}">My Games</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'players_app:user_logout' %}">Logout</a>
