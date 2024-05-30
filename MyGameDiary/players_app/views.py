@@ -34,6 +34,36 @@ class AnonymousRequiredMixin(UserPassesTestMixin):
         return redirect('homepage')
 
 
+class ProfileOwnershipRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        profile_pk = self.request.GET.get('profile_pk')
+        user_profile = self.request.user.profile
+        return user_profile.is_admin or str(profile_pk) == str(user_profile.pk)
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You don't have permission to edit this profile.")
+        return redirect('homepage')
+
+
+class ProfileNotPrivateRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        profile_pk = self.request.GET.get('profile_pk')
+        user_profile = self.request.user.profile
+        try:
+            profile = Profile.objects.filter(pk=profile_pk).first()
+            if profile:
+                return user_profile.is_admin or profile == user_profile or not profile.is_private
+            else:
+                messages.error(self.request, f"Profile with id {profile_pk} was not found in our database.")
+        except ValueError:
+            messages.error(self.request, f"'{profile_pk}' is not a valid profile id.")
+        return False
+
+    def handle_no_permission(self):
+        messages.error(self.request, "This profile is private.")
+        return redirect('homepage')
+
+
 class PlayerLoginView(FormView):
     template_name = 'authentication/user-login.html'
     form_class = AuthenticationForm
@@ -44,7 +74,7 @@ class PlayerLoginView(FormView):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(self.request, user)
-            user_title = "MIGHTY ADMIN " if user.profile.is_admin() else ''
+            user_title = "MIGHTY ADMIN " if user.profile.is_admin else ''
             messages.success(self.request, f'Nice to see you, {user_title + self.request.user.username}!')
             return redirect(reverse_lazy('homepage'))
         return super().form_valid(form)
@@ -59,7 +89,7 @@ class PlayerLogoutView(LoginRequiredMixin, RedirectView):
     login_url = reverse_lazy('players_app:user_login')
 
     def get(self, *args, **kwargs):
-        user_title = "MIGHTY ADMIN " if self.request.user.profile.is_admin() else ''
+        user_title = "MIGHTY ADMIN " if self.request.user.profile.is_admin else ''
         self.logged_user = user_title + self.request.user.username
         logout(self.request)
         return super().get(self.request, *args, **kwargs)
@@ -91,16 +121,16 @@ class PlayerRegisterView(AnonymousRequiredMixin, FormView):
         return redirect(reverse_lazy('players_app:user_register'))
 
 
-class PortfolioView(LoginRequiredMixin, ListView):
+class ProfileView(LoginRequiredMixin, ProfileNotPrivateRequiredMixin, ListView):
     model = GameCard
-    template_name = 'portfolio.html'
+    template_name = 'profile.html'
     login_url = reverse_lazy('players_app:user_login')
     context_object_name = 'gamecards'
     profile_pk = None
     profile = None
 
     def get(self, *args, **kwargs):
-        self.profile_pk = kwargs.get('profile_pk')
+        self.profile_pk = self.request.GET.get('profile_pk')
         return super().get(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -120,7 +150,7 @@ class PortfolioView(LoginRequiredMixin, ListView):
         return GameCard.objects.none()
 
 
-class PortfolioChangePrivacyView(LoginRequiredMixin, RedirectView):
+class ProfileChangePrivacyView(LoginRequiredMixin, ProfileOwnershipRequiredMixin, RedirectView):
     login_url = reverse_lazy('players_app:user_login')
 
     def change_privacy(self, profile_pk):
@@ -138,9 +168,15 @@ class PortfolioChangePrivacyView(LoginRequiredMixin, RedirectView):
 
     def get(self, *args, **kwargs):
         profile_pk = self.request.GET.get('profile_pk')
-        if self.change_privacy(profile_pk):
-            return redirect('players_app:portfolio', profile_pk=profile_pk)
-        return redirect('players_app:portfolio', profile_pk=self.request.user.profile.pk)
+        self.change_privacy(profile_pk)
+        return redirect(reverse_lazy('players_app:profile') + '?profile_pk=' + profile_pk)
+
+
+class ProfileListView(LoginRequiredMixin, ListView):
+    model = Profile
+    template_name = 'profile-list.html'
+    login_url = reverse_lazy('players_app:user_login')
+    context_object_name = 'profiles'
 
 
 class GameCardCreateView(LoginRequiredMixin, RedirectView):

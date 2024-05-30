@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+     <div class="d-flex justify-content-center align-items-center p-2 m-1 table-primary bg-info bg-gradient">
+        <div class="w-25">
+            Player name
+        </div>
+        <div class="w-25">
+            Games in portfolio
+        </div>
+        <div class="w-25">
+            Games finished
+        </div>
+        <div class="w-25">
+            Profile status
+        </div>
+        <div class="w-25">
+                Actions
+        </div>
+    </div>
+    <div class="d-flex flex-column">
+        {% for profile in profiles %}
+            <div class="d-flex justify content align-items-center p-2 m-1 bg-info">
+                <div class="w-25">
+                    <b>{{ profile.user.username }}</b>
+                </div>
+                <div class="w-25">
+                    number of games
+                </div>
+                <div class="w-25">
+                    number of finished games
+                </div>
+                <div class="w-25">
+                    {% if profile.is_private %}
+                        <div class="badge bg-danger text-white text-wrap mx-2">
+                            private
+                        </div>
+                    {% else %}
+                        <div class="badge bg-success text-white text-wrap mx-2">
+                            public
+                        </div>
+                    {% endif %}
+                </div>
+                {% if not profile.is_private %}
+                    <div class="w-25">
+                        <a href="{% url 'players_app:profile' %}?profile_pk={{ profile.pk }}">Peek at Portfolio</a>
+                    </div>
+                {% else %}
+                    <div class="w-25"></div>
+                {% endif %}
+            </div>
+        {%  endfor  %}
+    </div>
+{% endblock %}

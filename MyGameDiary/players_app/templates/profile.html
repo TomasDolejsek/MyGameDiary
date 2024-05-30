@@ -8,7 +8,7 @@
                background-color: dodgerblue;}
     </style>
     <div class="d-flex justify-content-around align-items-center">
-        <div class="d-flex justify content-around align-items-center">
+        <div class="d-flex justify-content-around align-items-center">
             <div>
                 <h2>{{ profile.user.username }}'s Game Portfolio</h2>
             </div>
@@ -24,9 +24,9 @@
         </div>
         <div class="btn">
             {% if profile.is_private %}
-                <a href="{% url 'players_app:portfolio_change_privacy' %}?profile_pk={{ profile.user.pk }}">Make Portfolio Public</a>
+                <a href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}">Make Portfolio Public</a>
             {% else %}
-                <a href="{% url 'players_app:portfolio_change_privacy' %}?profile_pk={{ profile.user.pk }}">Make Portfolio Private</a>
+                <a href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}">Make Portfolio Private</a>
             {% endif %}
         </div>
     </div>

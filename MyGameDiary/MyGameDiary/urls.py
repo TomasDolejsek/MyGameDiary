@@ -19,6 +19,7 @@ from django.urls import path, include
 from MyGameDiary.views import HomePageView, SessionView
 
 urlpatterns = [
+    # general views
     path('admin/', admin.site.urls),
     path('', HomePageView.as_view(), name='homepage'),
     path('session/', SessionView.as_view(), name='session_view'),

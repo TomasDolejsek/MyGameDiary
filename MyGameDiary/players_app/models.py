@@ -16,6 +16,7 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user}"
 
+    @property
     def is_admin(self):
         return self.user.groups.filter(name='Admin').exists()
 
