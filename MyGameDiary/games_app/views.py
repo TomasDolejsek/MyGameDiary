@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from players_app.mixins import UserRightsMixin
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -8,7 +9,6 @@ from django.views.generic import ListView, TemplateView
 from games_app.forms import GameSearchApiForm
 from games_app.api_utils import find_game_id, save_game, save_to_file
 from games_app.models import Game
-from players_app.views import UserRightsMixin
 
 
 class GameListView(ListView):
@@ -41,7 +41,7 @@ class GameAddView(LoginRequiredMixin, UserRightsMixin, TemplateView):
         form = GameSearchApiForm(self.request.POST)
         if form.is_valid():
             game_title = form.cleaned_data['name']
-            return redirect('games_app:game_save', game_title)
+            return redirect(reverse_lazy('games_app:game_save'), game_title)
         else:
             return HttpResponse('Bad data')
 
@@ -75,4 +75,4 @@ class GameSaveView(LoginRequiredMixin, UserRightsMixin, TemplateView):
             messages.success(self.request, 'Game successfully saved.')
         else:
             messages.error(self.request, 'Game is already in the database.')
-        return redirect('games_app:game_list')
+        return redirect(reverse_lazy('games_app:game_list'))

@@ -4,67 +4,15 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView, RedirectView, ListView, DetailView
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from players_app.mixins import AnonymousRequiredMixin, ProfileOwnershipRequiredMixin, ProfileNotPrivateRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from players_app.forms import PlayerRegistrationForm
 from players_app.models import GameCard, Profile
 from games_app.models import Game
 
 
-class UserRightsMixin:
-    allowed_groups = []
-
-    @staticmethod
-    def is_member_of(user, group_names):
-        if 'All' in group_names:
-            return True
-        return user.groups.filter(name__in=group_names).exists()
-
-    def get_context_rights(self, *args, **kwargs):
-        context = {'user_has_rights': self.is_member_of(self.request.user, self.allowed_groups)}
-        return context
-
-
-class AnonymousRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.is_anonymous
-
-    def handle_no_permission(self):
-        messages.error(self.request, "You are already registered.")
-        return redirect('homepage')
-
-
-class ProfileOwnershipRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        profile_pk = self.request.GET.get('profile_pk')
-        user_profile = self.request.user.profile
-        return user_profile.is_admin or str(profile_pk) == str(user_profile.pk)
-
-    def handle_no_permission(self):
-        messages.error(self.request, "You don't have permission to edit this profile.")
-        return redirect('homepage')
-
-
-class ProfileNotPrivateRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        profile_pk = self.request.GET.get('profile_pk')
-        user_profile = self.request.user.profile
-        try:
-            profile = Profile.objects.filter(pk=profile_pk).first()
-            if profile:
-                return user_profile.is_admin or profile == user_profile or not profile.is_private
-            else:
-                messages.error(self.request, f"Profile with id {profile_pk} was not found in our database.")
-        except ValueError:
-            messages.error(self.request, f"'{profile_pk}' is not a valid profile id.")
-        return False
-
-    def handle_no_permission(self):
-        messages.error(self.request, "This profile is private.")
-        return redirect('homepage')
-
-
-class PlayerLoginView(FormView):
+class PlayerLoginView(AnonymousRequiredMixin, FormView):
     template_name = 'authentication/user-login.html'
     form_class = AuthenticationForm
 
@@ -179,7 +127,7 @@ class ProfileListView(LoginRequiredMixin, ListView):
     context_object_name = 'profiles'
 
 
-class GameCardCreateView(LoginRequiredMixin, RedirectView):
+class GameCardCreateView(LoginRequiredMixin, ProfileOwnershipRequiredMixin, RedirectView):
     login_url = reverse_lazy('players_app:user_login')
     url = reverse_lazy('games_app:game_list')
 
@@ -201,7 +149,7 @@ class GameCardCreateView(LoginRequiredMixin, RedirectView):
         return super().get(self.request, *args, **kwargs)
 
 
-class GameCardDetailView(LoginRequiredMixin, DetailView):
+class GameCardDetailView(LoginRequiredMixin, ProfileNotPrivateRequiredMixin, DetailView):
     model = GameCard
     template_name = 'gamecard-detail.html'
     login_url = reverse_lazy('players_app:user_login')

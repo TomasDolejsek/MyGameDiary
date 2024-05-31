@@ -2,7 +2,7 @@
 {% load bootstrap5 %}
 
 {% block content %}
-     <div class="d-flex justify-content-center align-items-center p-2 m-1 table-primary bg-info bg-gradient">
+     <div class="d-flex justify-content-center align-items-center p-1 table-primary bg-warning">
         <div class="w-25">
             Player name
         </div>
@@ -21,7 +21,7 @@
     </div>
     <div class="d-flex flex-column">
         {% for profile in profiles %}
-            <div class="d-flex justify content align-items-center p-2 m-1 bg-info">
+            <div class="d-flex justify content align-items-center p-1 bg-info">
                 <div class="w-25">
                     <b>{{ profile.user.username }}</b>
                 </div>
@@ -42,7 +42,7 @@
                         </div>
                     {% endif %}
                 </div>
-                {% if not profile.is_private %}
+                {% if not profile.is_private or user.profile.is_admin %}
                     <div class="w-25">
                         <a href="{% url 'players_app:profile' %}?profile_pk={{ profile.pk }}">Peek at Portfolio</a>
                     </div>

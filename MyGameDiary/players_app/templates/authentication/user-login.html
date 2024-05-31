@@ -8,7 +8,8 @@
             <form action="." method="POST"> {% csrf_token %}
                 {{ form.as_p }}
                 <br>
-                <input type="submit" name="button-login" value="Login">
+                <input type="submit" name="button-login" value="Login">&nbsp;&nbsp;
+                Don't have an account yet? <a href="{% url 'players_app:user_register' %}">Register now!</a>
             </form>
         </div>
     </div>

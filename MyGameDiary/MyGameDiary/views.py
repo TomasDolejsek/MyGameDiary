@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from players_app.views import UserRightsMixin
+from players_app.mixins import UserRightsMixin
 
 
 class HomePageView(TemplateView):

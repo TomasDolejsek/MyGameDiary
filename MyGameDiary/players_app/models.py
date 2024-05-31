@@ -7,7 +7,7 @@ from games_app.models import Game
 class Profile(models.Model):
     """
     Profile Model
-    is linked one-to-one with the generic User django Model
+    is linked one-to-one with the generic User django model
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     register_date = models.DateField(default=datetime.today)
