@@ -1,13 +1,13 @@
 from django.db import IntegrityError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView, RedirectView, ListView, DetailView
+from django.views.generic import FormView, RedirectView, ListView, DetailView, UpdateView
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from players_app.mixins import AnonymousRequiredMixin, ProfileOwnershipRequiredMixin, ProfileNotPrivateRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
-from players_app.forms import PlayerRegistrationForm
+from players_app.forms import PlayerRegistrationForm, GameCardForm
 from players_app.models import GameCard, Profile
 from games_app.models import Game
 
@@ -154,3 +154,15 @@ class GameCardDetailView(LoginRequiredMixin, ProfileNotPrivateRequiredMixin, Det
     template_name = 'gamecard-detail.html'
     login_url = reverse_lazy('players_app:user_login')
     context_object_name = 'gamecard'
+
+
+class GameCardUpdateView(LoginRequiredMixin, ProfileOwnershipRequiredMixin, UpdateView):
+    model = GameCard
+    template_name = 'gamecard-update.html'
+    login_url = reverse_lazy('players_app:user_login')
+    context_object_name = 'gamecard'
+    success_url = reverse_lazy('players_app:profile')
+    form_class = GameCardForm
+
+
+

@@ -2,41 +2,43 @@
 {% load bootstrap5 %}
 
 {% block content %}
-    <div class="d-flex justify-content-between align-items-center p-2 bg-secondary bg-gradient text-warning border border-dark rounded-top">
-        <div class="d-flex w-75 flex-row justify-content-right align-items-center">
-            <div>
-                <h2 class="text-uppercase">{{ profile.user.username }}'s Game Profile</h2>
-            </div>
+    <div class="d-flex bg-secondary rounded border border-dark">
+        <div class="d-flex w-100 justify-content-between align-items-center bg-dark p-1 m-1 rounded">
+        <div class="d-flex w-75 justify-content-start align-items-center text-light px-1">
+            <h2 class="text-uppercase">{{ profile.user.username }}</h2><h2>'s Game Profile</h2>
             {% if profile.is_private %}
-                <div class="badge bg-danger text-white text-wrap mx-2">
-                    private
-                </div>
+            <div class="badge bg-danger text-white mx-3">
+                private
+            </div>
             {% else %}
-                <div class="badge bg-success text-white text-wrap mx-2">
-                    public
-                </div>
+            <div class="badge bg-success text-white mx-3">
+                public
+            </div>
             {% endif %}
         </div>
         {% if user.profile == profile or user.profile.is_admin %}
-            <div class="d-flex w-25 justify-content-right bg-danger">
-                {% if profile.is_private %}
-                    <a class="btn btn-warning rounded" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}">Make Profile Public</a>
-                {% else %}
-                    <a class="btn btn-primary rounded" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}">Make Profile Private</a>
-                {% endif %}
-            </div>
+        <div class="d-flex w-25 justify-content-end px-2">
+            <div>
+            {% if profile.is_private %}
+                <a class="btn btn-warning rounded" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Public</b></a>
+            {% else %}
+                <a class="btn btn-warning rounded" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Private</b></a>
+            {% endif %}
+           </div>
+        </div>
         {% endif %}
     </div>
-    <div class="d-flex flex-column bg-secondary p-1 rounded-bottom border border-dark">
+    </div>
+    <div class="d-flex flex-column bg-secondary p-1 rounded border border-dark rounded">
     {% for gamecard in gamecards %}
-        <div class="d-flex justify-content-between align-items-center bg-secondary bg-dark rounded-3 p-2 mb-1">
+        <div class="d-flex justify-content-between align-items-center bg-dark rounded-3 p-2 mb-1">
             <div class="d-flex align-items-center w-50">
-                <div class="d-flex w-25">
+                <div class="d-flex">
                     <img src="{{  gamecard.game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100"
                          class="border rounded-3">
                 </div>
-                <div class="d-flex justify-content-center text-center bg-dark text-white rounded-3">
-                    <b>{{ gamecard.game.name }}</b>
+                <div class="text-white text-uppercase px-4">
+                    {{ gamecard.game.name }}
                 </div>
             </div>
             <div class="d-flex w-25">
