@@ -1,7 +1,8 @@
 import requests
 from dotenv import load_dotenv
 from os import getenv
-from games_app.models import Game, Genre
+from games_app.models import Genre, Perspective, Game
+import time
 
 
 # Environmental variables
@@ -49,6 +50,27 @@ def save_genres():
     print(f'Successfully saved {len(genres)} genres.')
 
 
+def get_perspectives(url=api_url):
+    endpoint = 'player_perspectives'
+    headers = {'Client-ID': client_id,
+               'Authorization': 'Bearer ' + access_token}
+    data = f"fields name;"
+
+    response = requests.post(url + endpoint, headers=headers, data=data)
+    perspectives = response.json()
+    return perspectives
+
+
+def save_perspectives():
+    perspectives = get_perspectives()
+    for perspective in perspectives:
+        id = perspective['id']
+        name = perspective['name']
+        new_perspective = Perspective(id=id, name=name)
+        new_perspective.save()
+    print(f'Successfully saved {len(perspectives)} perspectives.')
+
+
 def find_game_id(name, url=api_url):
     endpoint = 'games'
     headers = {'Client-ID': client_id,
@@ -67,46 +89,57 @@ def get_game_data(game_id, url=api_url):
     endpoint = 'games'
     headers = {'Client-ID': client_id,
                'Authorization': 'Bearer ' + access_token}
-    data = f'fields id, name, genres; where id = {game_id};'
+    data = (f'fields id, name, cover, first_release_date, rating, summary, genres, player_perspectives; '
+            f'where id = {game_id};')
 
     response = requests.post(url + endpoint, headers=headers, data=data)
     data = response.json()[0]
+    if 'player_perspectives' not in data:
+        data['player_perspectives'] = []
     game_data = {'id': data['id'],
                  'name': data['name'],
-                 'year': get_game_release_year(game_id),
                  'cover_url': get_game_cover_url(game_id),
-                 'genres': data['genres']}
+                 'year': convert_to_year(data['first_release_date']),
+                 'rating': round(data['rating']),
+                 'summary': data['summary'],
+                 'genres': data['genres'],
+                 'perspectives': data['player_perspectives']}
     return game_data
 
 
-def save_games():
-    count = 0
-    with open('games_app/games_id.txt', 'r') as file:
-        for game in file.readlines():
-            game_id, game_name = game.split(',')
-            if save_game(int(game_id)):
-                count += 1
-    print(f"Successfully saved data of {count} NEW game{'s' if count != 1 else ''}.")
-
-
-def save_game(game_id):
+def save_game(game_id, rewrite=False):
     game_check = Game.objects.filter(pk=game_id).first()
-    if game_check:
+    if game_check and not rewrite:
         print(f'{game_check} already exists in the database.')
         return False
     game_data = get_game_data(game_id)
     game = Game()
     game.id = game_data['id']
     game.name = game_data['name']
-    game.year = game_data['year']
     game.cover_url = game_data['cover_url']
+    game.year = game_data['year']
+    game.rating = game_data['rating']
+    game.summary = game_data['summary']
     game.save()
     for genre in game_data['genres']:
         new_genre = Genre.objects.get(pk=genre)
         game.genres.add(new_genre)
+    for perspective in game_data['perspectives']:
+        new_perspective = Perspective.objects.get(pk=perspective)
+        game.perspectives.add(new_perspective)
     game.save()
     print(f'Successfully saved data for {game}.')
     return True
+
+
+def save_games(rewrite=False):
+    count = 0
+    with open('games_app/games_id.txt', 'r') as file:
+        for game in file.readlines():
+            game_id, game_name = game.split(',')
+            if save_game(int(game_id), rewrite=rewrite):
+                count += 1
+    print(f"Successfully saved data of {count} NEW game{'s' if count != 1 else ''}.")
 
 
 def save_to_file(game_string):
@@ -127,13 +160,41 @@ def get_game_cover_url(game_id, url=api_url):
     return cover_url
 
 
-def get_game_release_year(game_id, url=api_url):
-    endpoint = 'release_dates'
+def convert_to_year(timestamp):
+    return time.gmtime(timestamp).tm_year
+
+
+def get_collection(collection_id, url=api_url):
+    endpoint = 'collections'
     headers = {'Client-ID': client_id,
                'Authorization': 'Bearer ' + access_token}
-    data = f'fields y; where game = {game_id};'
+    data = f"fields name; where id = {collection_id};"
 
     response = requests.post(url + endpoint, headers=headers, data=data)
-    year = min([x.get('y') for x in response.json()])
-    # print(year)
-    return year
+    data = response.json()
+    return data
+
+
+def get_franchise(game_id, url=api_url):
+    endpoint = 'franchises'
+    headers = {'Client-ID': client_id,
+               'Authorization': 'Bearer ' + access_token}
+    data = f"fields name; where id = {game_id};"
+
+    response = requests.post(url + endpoint, headers=headers, data=data)
+    data = response.json()
+    return data
+
+
+def get_platform_names(platforms_list, url=api_url):
+    endpoint = 'platform_families'
+    headers = {'Client-ID': client_id,
+               'Authorization': 'Bearer ' + access_token}
+    data = f"fields name; limit 20; sort id; where id=6;"
+    response = requests.post(url + endpoint, headers=headers, data=data)
+    data = response.json()
+    print(data)
+    return data
+
+
+

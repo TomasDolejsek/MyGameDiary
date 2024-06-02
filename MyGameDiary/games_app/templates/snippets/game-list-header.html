@@ -1,0 +1,24 @@
+<!-- Game List Header -->
+<div class="d-flex w-100 justify-content-between align-items-center bg-dark p-2 mt-1 rounded">
+    <div class="d-flex justify-content-center align-items-center text-light">
+        <div class="text-uppercase fs-2">
+            Game Database
+        </div>
+    </div>
+    <div class="d-flex text-white fs-5 align-items-center">
+        <div class="mx-3">
+            Can't Find Your Favorite Game?
+        </div>
+        <div>
+            <a class="btn btn-warning rounded" href="#"><b>Request a Game!</b></a>
+        </div>
+    </div>
+    <div>
+        {% if user.profile.is_admin %}
+        <a class="btn btn-danger rounded" href="{% url 'games_app:game_add' %}"><b>Add a New Game</b></a>    
+        {% endif %}
+    </div>
+    <div class="text-white fs-4">
+        Number of Games: {{ total_games }}
+    </div>
+</div>

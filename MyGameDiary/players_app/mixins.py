@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
-from players_app.models import Profile
+from players_app.models import Profile, GameCard
 
 
 class UserRightsMixin:
@@ -34,30 +34,63 @@ class AnonymousRequiredMixin(UserPassesTestMixin):
 
 class ProfileOwnershipRequiredMixin(UserPassesTestMixin):
     def test_func(self):
-        profile_pk = self.request.GET.get('profile_pk')
         user_profile = self.request.user.profile
-        return user_profile.is_admin or str(profile_pk) == str(user_profile.pk)
+        return user_profile.is_admin or str(self.profile_pk) == str(user_profile.pk)
 
     def handle_no_permission(self):
         messages.error(self.request, "You don't have permission to edit this profile.")
         return redirect(reverse_lazy('homepage'))
 
 
-class ProfileNotPrivateRequiredMixin(UserPassesTestMixin):
+class GameCardOwnershipRequiredMixin(UserPassesTestMixin):
     def test_func(self):
-        profile_pk = self.request.GET.get('profile_pk')
         user_profile = self.request.user.profile
         try:
-            profile = Profile.objects.filter(pk=profile_pk).first()
-            if profile:
-                return user_profile.is_admin or profile == user_profile or not profile.is_private
+            gamecard = GameCard.objects.filter(pk=self.gamecard_pk).first()
+            if gamecard:
+                return user_profile.is_admin or gamecard in GameCard.objects.on_profile(profile=user_profile)
             else:
-                messages.error(self.request, f"Profile with id {profile_pk} was not found in our database.")
+                messages.error(self.request, f"Gamecard was not found in our database.")
         except ValueError:
-            messages.error(self.request, f"'{profile_pk}' is not a valid profile id.")
+            messages.error(self.request, "Invalid gamecard ID.")
+        return False
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You don't have permission to edit this gamecard.")
+        return redirect(reverse_lazy('homepage'))
+
+
+class ProfileNotPrivateRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        user_profile = self.request.user.profile
+        try:
+            profile = Profile.objects.filter(pk=self.profile_pk).first()
+            if profile:
+                return not profile.is_private or profile == user_profile or user_profile.is_admin
+            else:
+                messages.error(self.request, f"Profile was not found in our database.")
+        except ValueError:
+            messages.error(self.request, "Invalid profile ID.")
         return False
 
     def handle_no_permission(self):
         messages.error(self.request, "This profile is private.")
         return redirect(reverse_lazy('homepage'))
-    
+
+
+class GameCardNotPrivateRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        user_profile = self.request.user.profile
+        try:
+            self.gamecard = GameCard.objects.filter(pk=self.gamecard_pk).first()
+            if self.gamecard:
+                return user_profile.is_admin or self.gamecard.profile == user_profile or not self.gamecard.profile.is_private
+            else:
+                messages.error(self.request, f"Gamecard was not found in our database.")
+        except ValueError:
+            messages.error(self.request, "Invalid gamecard ID.")
+        return False
+
+    def handle_no_permission(self):
+        messages.error(self.request, "This gamecard is private.")
+        return redirect(reverse_lazy('homepage'))

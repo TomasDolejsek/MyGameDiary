@@ -2,62 +2,38 @@
 {% load bootstrap5 %}
 
 {% block content %}
-    <div class="d-flex bg-secondary rounded border border-dark">
-        <div class="d-flex w-100 justify-content-between align-items-center bg-dark p-1 m-1 rounded">
-        <div class="d-flex w-75 justify-content-start align-items-center text-light px-1">
-            <h2 class="text-uppercase">{{ profile.user.username }}</h2><h2>'s Game Profile</h2>
-            {% if profile.is_private %}
-            <div class="badge bg-danger text-white mx-3">
-                private
-            </div>
-            {% else %}
-            <div class="badge bg-success text-white mx-3">
-                public
-            </div>
-            {% endif %}
-        </div>
-        {% if user.profile == profile or user.profile.is_admin %}
-        <div class="d-flex w-25 justify-content-end px-2">
-            <div>
-            {% if profile.is_private %}
-                <a class="btn btn-warning rounded" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Public</b></a>
-            {% else %}
-                <a class="btn btn-warning rounded" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Private</b></a>
-            {% endif %}
-           </div>
-        </div>
-        {% endif %}
-    </div>
-    </div>
-    <div class="d-flex flex-column bg-secondary p-1 rounded border border-dark rounded">
+    {% include 'snippets/profile-header.html' %}
     {% for gamecard in gamecards %}
-        <div class="d-flex justify-content-between align-items-center bg-dark rounded-3 p-2 mb-1">
-            <div class="d-flex align-items-center w-50">
+        <div class="d-flex w-100 justify-content-between align-items-center bg-dark rounded p-2 mt-1">
+            <div class="d-flex align-items-center">
                 <div class="d-flex">
                     <img src="{{  gamecard.game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100"
                          class="border rounded-3">
                 </div>
-                <div class="text-white text-uppercase px-4">
+                <div class="text-white text-uppercase px-4 fs-5">
                     {{ gamecard.game.name }}
                 </div>
-            </div>
-            <div class="d-flex w-25">
-                {% if gamecard.is_finished %}
-                <span class="badge rounded-pill bg-success">Finished</span>
-                {% endif %}
-            </div>
-            <div class="d-flex w-25 justify-content-around">
                 <div>
-                    <a class="btn btn-primary" href="{% url 'players_app:gamecard_detail' gamecard.pk %}?profile_pk={{ profile.user.pk }}">Detail</a>
+                    {% if gamecard.is_finished %}
+                    <span class="badge rounded-pill bg-success">Finished</span>
+                    {% endif %}
                 </div>
-                <div>
-                    <a class="btn btn-warning" href="{% url 'players_app:gamecard_detail' gamecard.pk %}?profile_pk={{ profile.user.pk }}">Update</a>
-                </div>
-                <div>
-                    <a class="btn btn-danger" href="{% url 'players_app:gamecard_detail' gamecard.pk %}?profile_pk={{ profile.user.pk }}">Delete</a>
+            </div>
+            <div class="d-flex justify-content-start align-items-center">
+                <div class="d-flex justify-content-end">
+                    <div>
+                        <a class="btn btn-primary" href="{% url 'players_app:gamecard_detail' gamecard.pk %}">Detail</a>
+                    </div>
+                    {% if user.profile == profile or user.profile.is_admin %}
+                        <div class="px-2">
+                            <a class="btn btn-warning" href="{% url 'players_app:gamecard_update' gamecard.pk %}">Update</a>
+                        </div>
+                        <div>
+                            <a class="btn btn-danger" href="{% url 'players_app:gamecard_delete' gamecard.pk %}">Delete</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     {%  endfor  %}
-    </div>
 {% endblock %}

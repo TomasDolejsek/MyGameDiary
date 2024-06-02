@@ -38,7 +38,7 @@ class GameCardManager(models.Manager):
     def get_queryset(self):
         return GameCardQuerySet(self.model, using=self._db)
 
-    def is_on_profile(self, profile):
+    def on_profile(self, profile):
         return self.get_queryset().is_on_profile(profile)
 
 

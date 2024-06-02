@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <div class="d-flex flex-column justify-content-center w-100 bg-dark mt-1 p-2 rounded">
+        <div class="d-flex w-100 justify-content-start p-3 border border-white rounded">
+            <div class="d-flex w-100 justify-content-center">
+                <div class="d-flex w-25 flex-column justify-content-center align-items-center">
+                    <img src="{{  game.cover_url }}" alt="{{ game.name }} cover" width="200" height="200"
+                         class="border border-white border-2 rounded-3">
+                    <div class="d-flex justify-content-start mt-3">
+                        <a class="btn btn-primary rounded me-3" href="#"><b>GameCards</b></a>
+                        <a class="btn btn-warning rounded" 
+                           href="{% url 'players_app:gamecard_create' %}?game_id={{ game.id }}&profile_pk={{ user.profile.pk }}">
+                           <b>Add to My Profile</b></a>
+                    </div>
+                </div>
+                <div class="flex flex-column w-75 fs-3 text-white">
+                    <div class="fs-1 text-uppercase ms-2">
+                        {{ game.name }}
+                    </div>
+                    <div class="text-white mt-2 ms-3">
+                        <div class="row">
+                             <div class="col-2">
+                                 Year:
+                            </div>
+                            <div class="col ms-1">
+                                {{ game.year }}
+                            </div>
+                        </div>
+                        <div class="row">
+                             <div class="col-2">
+                                 Rating:
+                            </div>
+                            <div class="col ms-1">
+                                {{ game.rating }} / 100
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                 Genre:
+                            </div>
+                            <div class="col ms-1">
+                                {{ game.get_genres_names }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                 Perspective:
+                            </div>
+                            <div class="col ms-1">
+                                {{ game.get_perspectives_names }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column w-100 fs-3 text-white border border-white rounded p-2">
+            <b>Summary:</b>
+            <div class="rounded p-1 fs-4">
+                {{ game.summary }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

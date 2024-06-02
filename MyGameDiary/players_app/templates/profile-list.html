@@ -44,7 +44,7 @@
                 </div>
                 {% if not profile.is_private or user.profile.is_admin %}
                     <div class="w-25">
-                        <a href="{% url 'players_app:profile' %}?profile_pk={{ profile.pk }}">Peek at Portfolio</a>
+                        <a href="{% url 'players_app:profile' profile.pk %}">Peek at Portfolio</a>
                     </div>
                 {% else %}
                     <div class="w-25"></div>

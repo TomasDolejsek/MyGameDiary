@@ -3,7 +3,6 @@
 133004,Assassin's Creed Valhalla
 5606,Assassin's Creed Unity
 1266,Assassin's Creed III
-1970,Assassin's Creed IV Black Flag
 127,Assassin's Creed II
 7570,Assassin's Creed Rogue
 128,Assassin's Creed
@@ -29,3 +28,9 @@
 1161,Tomb Raider: Legend
 6185,Syberia II
 2419,Albion
+
+8768,Drakensang: The Dark Eye
+3798,Dungeon Master
+8769,Drakensang: The River of Time
+673,Doom
+280,Doom 3

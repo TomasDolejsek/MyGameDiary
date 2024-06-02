@@ -1,0 +1,30 @@
+<!-- Profile Header -->
+<div class="d-flex w-100 justify-content-between align-items-center bg-dark p-2 mt-1 rounded">
+    <div class="d-flex justify-content-center align-items-center text-light">
+        <div class="text-uppercase fs-2">
+            {{ profile.user.username }}'s Game Profile
+        </div>
+        {% if profile.is_private %}
+            <div class="badge bg-danger text-white mx-4">
+                private
+            </div>
+        {% else %}
+            <div class="badge bg-success text-white mx-4">
+                public
+            </div>
+        {% endif %}
+    {% if user.profile == profile or user.profile.is_admin %}
+        <div class="">
+            {% if profile.is_private %}
+                <a class="btn btn-warning rounded" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Public</b></a>
+            {% else %}
+                <a class="btn btn-warning rounded" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Private</b></a>
+            {% endif %}
+        </div>
+    {% endif %}
+    </div>
+    <div class="text-white fs-4">
+        Number of Game Cards: {{ total_gamecards }}
+    </div>
+</div>
+ 

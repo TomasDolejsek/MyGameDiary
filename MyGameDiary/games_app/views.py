@@ -2,19 +2,12 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from players_app.mixins import UserRightsMixin
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, TemplateView
+from django.views.generic import TemplateView, DetailView, ListView
 
 from games_app.forms import GameSearchApiForm
 from games_app.api_utils import find_game_id, save_game, save_to_file
 from games_app.models import Game
-
-
-class GameListView(ListView):
-    model = Game
-    template_name = 'game-list.html'
-    context_object_name = 'games'
 
 
 class GameAddView(LoginRequiredMixin, UserRightsMixin, TemplateView):
@@ -41,9 +34,7 @@ class GameAddView(LoginRequiredMixin, UserRightsMixin, TemplateView):
         form = GameSearchApiForm(self.request.POST)
         if form.is_valid():
             game_title = form.cleaned_data['name']
-            return redirect(reverse_lazy('games_app:game_save'), game_title)
-        else:
-            return HttpResponse('Bad data')
+            return redirect(reverse_lazy('games_app:game_save', kwargs={'game_title': game_title}))
 
 
 class GameSaveView(LoginRequiredMixin, UserRightsMixin, TemplateView):
@@ -76,3 +67,20 @@ class GameSaveView(LoginRequiredMixin, UserRightsMixin, TemplateView):
         else:
             messages.error(self.request, 'Game is already in the database.')
         return redirect(reverse_lazy('games_app:game_list'))
+
+
+class GameListView(ListView):
+    model = Game
+    template_name = 'game-list.html'
+    context_object_name = 'games'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_games'] = Game.objects.count()
+        return context
+
+
+class GameDetailView(DetailView):
+    model = Game
+    template_name = 'game-detail.html'
+    context_object_name = 'game'

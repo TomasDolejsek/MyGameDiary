@@ -22,4 +22,4 @@ class PlayerRegistrationForm(UserCreationForm):
 class GameCardForm(ModelForm):
     class Meta:
         model = GameCard
-        fields = '__all__'
+        fields = ['is_finished']
