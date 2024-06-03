@@ -56,7 +56,7 @@ class GameCardOwnershipRequiredMixin(UserPassesTestMixin):
         return False
 
     def handle_no_permission(self):
-        messages.error(self.request, "You don't have permission to edit this gamecard.")
+        messages.error(self.request, "You don't have permission to edit this game card.")
         return redirect(reverse_lazy('homepage'))
 
 

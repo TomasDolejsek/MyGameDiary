@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% load bootstrap5 %}
+{% load static %}
 
 {% block content %}
-    MainPage
-    {% if user.is_authenticated %}
-        Welcome back, {{ user }}!
-    {% else %}
-        <a href="{%  url 'players_app:user_login' %}">Login</a>
-    {% endif %}
+    <div class="d-flex w-100 justify-content-center bg-dark text-white fs-1 mt-1 text-uppercase rounded">
+        My Game Diary HomePage
+    </div>
     
+    
+    <a href="{%  url 'players_app:user_login' %}">Login</a>
+    <div class="d-flex w-100 bg-dark p-2 py-3 justify-content-start text-white fs-5 rounded mt-1">
+        (c) Tomáš Dolejšek 2024
+    </div>
 {% endblock %}

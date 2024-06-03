@@ -1,55 +1,50 @@
+<!-- Profile List -->
 {% extends 'base.html' %}
 {% load bootstrap5 %}
 
 {% block content %}
-     <div class="d-flex justify-content-center align-items-center p-1 table-primary bg-warning">
-        <div class="w-25">
-            Player name
-        </div>
-        <div class="w-25">
-            Games in portfolio
-        </div>
-        <div class="w-25">
-            Games finished
-        </div>
-        <div class="w-25">
-            Profile status
-        </div>
-        <div class="w-25">
-                Actions
-        </div>
-    </div>
-    <div class="d-flex flex-column">
-        {% for profile in profiles %}
-            <div class="d-flex justify content align-items-center p-1 bg-info">
-                <div class="w-25">
-                    <b>{{ profile.user.username }}</b>
+    {% include 'snippets/profile-list-header.html' %}
+    {% for profile in profiles %}
+        {% if profile == user.profile %}
+        <div class="d-flex w-100 justify-content-between align-items-center bg-dark rounded p-2 mt-1
+             border border-warning border-3">
+        {% else %}
+        <div class="d-flex w-100 justify-content-between align-items-center bg-dark rounded p-2 mt-1">
+        {% endif %}
+                <div>
+                    {% include 'snippets/profile-logo.html' %}
                 </div>
-                <div class="w-25">
-                    number of games
-                </div>
-                <div class="w-25">
-                    number of finished games
-                </div>
-                <div class="w-25">
-                    {% if profile.is_private %}
-                        <div class="badge bg-danger text-white text-wrap mx-2">
-                            private
+                <div class="d-flex w-75 justify-content-start align-items-center text-white">
+                    <div class="d-flex w-25 text-uppercase ps-3 fs-5">
+                        {{ profile.user.username }}
+                    </div>
+                    {% if not profile.is_private %}
+                    <div class="d-flex w-75 justify-content-start">
+                        <div class="d-flex w-25">
+                            Game Cards: {{ profile.total_gamecards }}
                         </div>
+                        <div class="d-flex w-25">
+                            Finished Games: {{ profile.total_finished_games }}
+                        </div>
+                        <div class="d-flex w-25">
+                            Total Hours Played: {{ profile.total_hours }}
+                        </div>
+                        <div class="d-flex w-25">
+                        </div>
+                    </div>
                     {% else %}
-                        <div class="badge bg-success text-white text-wrap mx-2">
-                            public
-                        </div>
+                    <div class="d-flex w-75 justify-content-center text-danger fs-5 text-uppercase">
+                        This profile is private
+                    </div>
                     {% endif %}
                 </div>
-                {% if not profile.is_private or user.profile.is_admin %}
-                    <div class="w-25">
-                        <a href="{% url 'players_app:profile' profile.pk %}">Peek at Portfolio</a>
-                    </div>
-                {% else %}
-                    <div class="w-25"></div>
-                {% endif %}
+            {% if not profile.is_private or user.profile.is_admin %}
+            <div class="d-flex w-25 justify-content-center">
+                <a class="btn btn-primary" href="{% url 'players_app:profile' profile.pk %}"><b>Peek at Profile</b></a>
             </div>
-        {%  endfor  %}
-    </div>
+            {% else %}
+            <div class="d-flex w-25"></div>   
+            {% endif %}
+        </div>
+    {%  endfor  %}
 {% endblock %}

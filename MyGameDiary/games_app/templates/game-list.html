@@ -11,7 +11,7 @@
                 <div class="d-flex">
                     <a href="{% url 'games_app:game_detail' game.pk %}">
                         <img src="{{  game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100"
-                             class="border rounded-3">
+                             class="border rounded">
                     </a>
                 </div>
                 <div class="text-white text-uppercase px-4 fs-5">
@@ -31,7 +31,7 @@
             </div>
             <div class="d-flex w-50 justify-content-end align-items-center">
                 <div class="">
-                    <a class="btn btn-primary" href="{% url 'games_app:game_detail' game.pk %}"><b>Game Info</b></a>    
+                    <a class="btn btn-primary" href="{% url 'games_app:game_detail' game.pk %}"><b>Game Info</b></a>
                 </div>
                 {% if user.is_authenticated %}
                 <div class="ms-2">

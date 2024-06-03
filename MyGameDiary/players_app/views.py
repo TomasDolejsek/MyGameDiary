@@ -5,9 +5,8 @@ from django.views.generic import FormView, RedirectView, ListView, DetailView, U
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from players_app.mixins import (AnonymousRequiredMixin, ProfileOwnershipRequiredMixin,
-                                ProfileNotPrivateRequiredMixin, GameCardOwnershipRequiredMixin,
-                                GameCardNotPrivateRequiredMixin)
+from players_app.mixins import (AnonymousRequiredMixin, ProfileOwnershipRequiredMixin, ProfileNotPrivateRequiredMixin,
+                                GameCardOwnershipRequiredMixin, GameCardNotPrivateRequiredMixin)
 from django.contrib.auth.forms import AuthenticationForm
 from players_app.forms import PlayerRegistrationForm, GameCardForm
 from players_app.models import GameCard, Profile
@@ -136,6 +135,14 @@ class ProfileListView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('players_app:user_login')
     context_object_name = 'profiles'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_profiles'] = Profile.objects.all().count()
+        return context
+
+    def get_queryset(self):
+        return Profile.objects.select_related('user').order_by('user__username')
+
 
 class GameCardCreateView(LoginRequiredMixin, ProfileOwnershipRequiredMixin, RedirectView):
     login_url = reverse_lazy('players_app:user_login')
@@ -204,7 +211,7 @@ class GameCardDeleteView(LoginRequiredMixin, GameCardOwnershipRequiredMixin, Del
         return super().dispatch(*args, **kwargs)
 
     def post(self, *args, **kwargs):
-        messages.warning(self.request, f"Gamecard was removed from your portfolio.")
+        messages.warning(self.request, f"Game Card was removed from your portfolio.")
         return super().post(*args, **kwargs)
 
     def get_success_url(self, *args, **kwargs):
