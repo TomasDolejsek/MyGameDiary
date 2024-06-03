@@ -3,8 +3,8 @@
 {% load bootstrap5 %}
 
 {% block bootstrap5_content %}
-    <div class="d-flex flex-column border border-dark border-3 rounded justify-content-center align-items-center
-                p-1 bg-secondary mx-5" >
+    <div class="d-flex flex-column rounded justify-content-center align-items-center
+                p-1 bg-secondary">
         {% include 'snippets/navbar.html' %}
         {% autoescape on %}{% bootstrap_messages %}{% endautoescape %}
         {% block content %}(no content){% endblock %}

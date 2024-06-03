@@ -3,13 +3,52 @@
 {% load static %}
 
 {% block content %}
-    <div class="d-flex w-100 justify-content-center bg-dark text-white fs-1 mt-1 text-uppercase rounded">
-        My Game Diary HomePage
+    <style>
+        .homepage {
+            background-image: url("{% static '/img/homepage_image.jpg' %}");
+            background-size: cover;
+            height: 80vh;
+        }
+    </style>
+    <div class="homepage d-flex flex-column w-100 border border-white rounded text-white"> 
+        <div class="d-flex flex-column justify-content-center align-items-center"
+             style="height: 70%;">
+            <div class="text-center">
+                <div class="text-uppercase" style="font-size: 60px;">
+                    My Game Diary
+                </div>
+                <div class="fs-3 mt-2 px-1 bg-dark rounded">
+                    A Place to Store Your Video Gaming Memories
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column border border-white p-2 fs-2 rounded align-items-center justify-content-center"
+             style="height: 30%;">
+            <div class="row w-100 text-center">    
+                <div class="col-4">
+                    TOTAL GAMES
+                </div>
+                <div class="col-4">
+                    TOTAL PLAYERS
+                </div>
+                <div class="col-4">
+                    GAME CARDS CREATED
+                </div>
+            </div>
+            <div class="row w-100 text-center fs-1">    
+                <div class="col-4">
+                    125
+                </div>
+                <div class="col-4">
+                    87
+                </div>
+                <div class="col-4">
+                    525
+                </div>
+            </div>
+        </div>
     </div>
-    
-    
-    <a href="{%  url 'players_app:user_login' %}">Login</a>
-    <div class="d-flex w-100 bg-dark p-2 py-3 justify-content-start text-white fs-5 rounded mt-1">
+    <div class="d-flex w-100 bg-dark p-2 py-3 mt-1 justify-content-start text-white fs-4 rounded mt-1">
         (c) Tomáš Dolejšek 2024
     </div>
 {% endblock %}

@@ -33,3 +33,4 @@
 8769,Drakensang: The River of Time
 673,Doom
 280,Doom 3
+5,Baldur's Gate

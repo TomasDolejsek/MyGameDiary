@@ -24,8 +24,8 @@
             <h5>Pick a game to save:</h5>
             <form action="/games/game-add/{{ game_title }}" method="POST"> {% csrf_token %}
                 {% for game in games %}
-                    <input type="radio" id="{{ game.id }}" name="game_to_save" value="{{ game.id }},{{ game.name }}">
-                        <label for="{{ game.id }}">{{ game.id }} - {{ game.name }}</label><br>
+                <input type="radio" id="{{ game.id }}" name="game_to_save" value="{{ game.id }},{{ game.name }}">
+                <label for="{{ game.id }}">{{ game.id }} - {{ game.name }}</label><br>
                 {% endfor %}
                 <input type="submit" value="Save this game!">
             </form>
