@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 
 
 class Genre(models.Model):
@@ -47,3 +48,25 @@ class Game(models.Model):
         for perspective in self.perspectives.all():
             perspectives_names.append(perspective.name)
         return ', '.join(perspectives_names)
+
+    @property
+    def total_gamecards(self):
+        from players_app.models import GameCard
+        return GameCard.objects.about_game(game=self).count()
+
+    @property
+    def public_gamecards(self):
+        from players_app.models import GameCard
+        return GameCard.objects.on_public_profiles(game=self).count()
+
+    @property
+    def private_gamecards(self):
+        return self.total_gamecards - self.public_gamecards
+
+    def total_finished(self):
+        from players_app.models import GameCard
+        return GameCard.objects.about_game(game=self).filter(is_finished=True).count()
+
+    def total_hours(self):
+        from players_app.models import GameCard
+        return GameCard.objects.about_game(game=self).aggregate(Sum('hours_played'))['hours_played__sum']

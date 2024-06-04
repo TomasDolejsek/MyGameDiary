@@ -10,7 +10,7 @@
             height: 80vh;
         }
     </style>
-    <div class="homepage d-flex flex-column w-100 border border-white rounded text-white"> 
+    <div class="homepage d-flex flex-column w-100 rounded mt-1 text-white"> 
         <div class="d-flex flex-column justify-content-center align-items-center"
              style="height: 70%;">
             <div class="text-center">
@@ -22,11 +22,11 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column border border-white p-2 fs-2 rounded align-items-center justify-content-center"
+        <div class="d-flex flex-column border-top border-white p-2 fs-2 rounded align-items-center justify-content-center"
              style="height: 30%;">
             <div class="row w-100 text-center">    
                 <div class="col-4">
-                    TOTAL GAMES
+                    AVAILABLE GAMES
                 </div>
                 <div class="col-4">
                     TOTAL PLAYERS
@@ -37,18 +37,16 @@
             </div>
             <div class="row w-100 text-center fs-1">    
                 <div class="col-4">
-                    125
+                    {{ total_games }}
                 </div>
                 <div class="col-4">
-                    87
+                    {{ total_players }}
                 </div>
                 <div class="col-4">
-                    525
+                    {{ total_gamecards }}
                 </div>
             </div>
         </div>
     </div>
-    <div class="d-flex w-100 bg-dark p-2 py-3 mt-1 justify-content-start text-white fs-4 rounded mt-1">
-        (c) Tomáš Dolejšek 2024
-    </div>
+    {% include 'snippets/homepage_footer.html' %}
 {% endblock %}

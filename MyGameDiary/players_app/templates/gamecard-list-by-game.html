@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    {% include 'snippets/gamecard-list-header.html' %}
+    {% for gamecard in gamecards %}
+        <div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 rounded mt-1">
+            <div style="width: 6%;">
+                    {% include 'snippets/profile-logo.html' %}
+                </div>
+            <div class="d-text justify-content-start text-uppercase fs-5 ps-1" style="width: 34%;">
+                <a class="text-white" href="{% url 'players_app:profile' gamecard.profile.user.pk %}">{{ gamecard.profile.user.username }}</a>
+            </div>
+            <div class="d-flex rounded justify-content-center align-items-center fs-4 p-1 text-white" style="width: 30%;">
+                <div class="d-flex w-100 fs-6 justify-content-around align-items-center text-center">
+                    {% if gamecard.is_finished %}
+                        <div>
+                            Finished:<br>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="green" class="bi bi-check" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                            </svg>
+                        </div>
+                    {% else %}
+                        <div>
+                            Finished:<br>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="red" class="bi bi-x" viewBox="0 0 16 16">
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </div>
+                    {% endif %}
+                    <div class="d-flex flex-column">
+                        Hours Played:<br>
+                        <h3 class="mt-1">{{ gamecard.hours_played }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end align-items-center" style="width: 30%;">
+                    <a class="btn btn-primary" href="{% url 'players_app:gamecard_detail' gamecard.pk %}"><b>Game Card Detail</b></a>
+            </div>
+        </div>
+    {%  endfor  %}
+{% endblock %}

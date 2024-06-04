@@ -1,5 +1,9 @@
 <!-- Profile Logo -->
 <div class="d-flex justify-content-center align-items-center bg-dark rounded-circle border border-white border-3
      text-white text-uppercase me-2" style="width:80px; height: 80px; font-family: serif; font-size: 50px;">
-    <b>{{ profile.first_letter }}</b>
+    {% if profile %}
+        <b>{{ profile.first_letter }}</b>
+    {% else %}
+        <b>{{ gamecard.profile.first_letter }}</b>
+    {% endif %}
 </div>

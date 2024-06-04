@@ -57,6 +57,11 @@ class GameCardQuerySet(models.QuerySet):
             return self.filter(game=game)
         return GameCard.objects.none()  # return empty queryset
 
+    def on_public_profiles(self, game):
+        if game is not None:
+            return self.about_game(game=game).filter(profile__is_private=False)
+        return GameCard.objects.none()
+
 
 class GameCardManager(models.Manager):
     def get_queryset(self):
@@ -67,6 +72,9 @@ class GameCardManager(models.Manager):
 
     def about_game(self, game):
         return self.get_queryset().about_game(game)
+
+    def on_public_profiles(self, game):
+        return self.get_queryset().on_public_profiles(game)
 
 
 class GameCard(models.Model):
@@ -80,7 +88,7 @@ class GameCard(models.Model):
     objects = GameCardManager()
 
     class Meta:
-        unique_together = (('game', 'profile'),)
+        unique_together = (('profile', 'game'),)
 
     def __str__(self):
         return f"{self.profile.user.username} - {self.game.name}"

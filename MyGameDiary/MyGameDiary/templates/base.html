@@ -1,12 +1,12 @@
 {% extends 'bootstrap-core.html' %}
-
+{% load static %}
 {% load bootstrap5 %}
 
 {% block bootstrap5_content %}
     <div class="d-flex flex-column rounded justify-content-center align-items-center
-                p-1 bg-secondary">
+                p-1 bg-primary border border-dark" style="max-width: 1920px;">
         {% include 'snippets/navbar.html' %}
-        {% autoescape on %}{% bootstrap_messages %}{% endautoescape %}
+        {% include 'snippets/messages-field.html' %}
         {% block content %}(no content){% endblock %}
     </div>
 {% endblock %}

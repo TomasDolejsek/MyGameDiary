@@ -8,6 +8,8 @@ from django.views.generic import TemplateView, DetailView, ListView
 from games_app.forms import GameSearchApiForm
 from games_app.api_utils import find_game_id, save_game, save_to_file
 from games_app.models import Game
+from players_app.models import GameCard
+from django.db.models import Sum
 
 
 class GameAddView(LoginRequiredMixin, UserRightsMixin, TemplateView):
@@ -77,6 +79,9 @@ class GameListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_games'] = Game.objects.count()
+        context['total_gamecards'] = GameCard.objects.count()
+        context['total_finished'] = GameCard.objects.filter(is_finished=True).count()
+        context['total_hours'] = GameCard.objects.aggregate(Sum('hours_played'))['hours_played__sum']
         return context
 
 

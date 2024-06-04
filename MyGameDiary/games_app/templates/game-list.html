@@ -1,37 +1,38 @@
 {% extends 'base.html' %}
 {% load bootstrap5 %}
 
-{% block title %}Game List{% endblock %}
-
 {% block content %}
     {% include 'snippets/game-list-header.html' %}
     {% for game in games %}
-        <div class="d-flex w-100 justify-content-between align-items-center bg-dark rounded p-2 mt-1">
-            <div class="d-flex w-75 justify-content-start align-items-center">
-                <div class="d-flex">
-                    <a href="{% url 'games_app:game_detail' game.pk %}">
-                        <img src="{{  game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100"
-                             class="border rounded">
-                    </a>
-                </div>
-                <div class="text-white text-uppercase px-4 fs-5">
-                    <a class="text-white" href="{% url 'games_app:game_detail' game.pk %}">{{ game.name }}</a> ({{ game.year }})
+        <div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 rounded mt-1">
+            <div style="width: 6%;">
+                <a href="{% url 'games_app:game_detail' game.pk %}">
+                    <img src="{{  game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100"
+                         class="border rounded">
+                </a>
+            </div>
+            <div class="text-white text-uppercase ps-1 fs-5" style="width: 29%;">
+                <a class="text-white" href="{% url 'games_app:game_detail' game.pk %}">{{ game.name }}</a> ({{ game.year }})
+            </div>
+            <div class="d-flex rounded justify-content-center align-items-center fs-4 p-1 text-white" style="width: 35%;">
+                <div class="d-flex w-100 fs-6 justify-content-around align-items-center text-center">
+                    <div class="d-flex flex-column">
+                        Game Cards:<br> 
+                        <h3 class="mt-1">{{ game.total_gamecards }}</h3>
+                    </div>
+                    <div class="d-flex flex-column">
+                        Finished:<br>
+                        <h3 class="mt-1">{{ game.total_finished }}</h3>
+                    </div>
+                    <div class="d-flex flex-column">
+                        Hours Played:<br>
+                        <h3 class="mt-1">{{ game.total_hours }}</h3>
+                    </div>                     
                 </div>
             </div>
-            <div class="d-flex bg-light rounded justify-content-center align-items-center fs-4 p-1" style="width:9%;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-star mt-1">
-                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
-                </svg>
-                <b>{{ game.rating }}</b>
-            </div>
-            <div class="d-flex w-50 ms-5 justify-content-start flex-column">
-                <div class="text-white">
-                    {{ game.get_genres_names }}
-                </div>
-            </div>
-            <div class="d-flex w-50 justify-content-end align-items-center">
+            <div class="d-flex justify-content-end align-items-center" style="width: 30%;">
                 <div class="">
-                    <a class="btn btn-primary" href="{% url 'games_app:game_detail' game.pk %}"><b>Game Info</b></a>
+                    <a class="btn btn-primary" href="{% url 'players_app:gamecard_list_by_game' game.pk %}"><b>Show Game Cards</b></a>
                 </div>
                 {% if user.is_authenticated %}
                 <div class="ms-2">

@@ -160,8 +160,8 @@ class GameCardCreateView(LoginRequiredMixin, ProfileOwnershipRequiredMixin, Redi
             associated_game = Game.objects.filter(pk=associated_game_pk).first()
             if associated_game:
                 GameCard.objects.create(profile=associated_profile, game=associated_game)
-                messages.success(self.request, f"{associated_game.name} (id: {associated_game_pk}) was added to your "
-                                               f"game portfolio.")
+                messages.success(self.request, f"{associated_game.name} was added to your "
+                                               f"game profile.")
             else:
                 messages.error(self.request, f"Game was not found in our game database.")
         except ValueError:
@@ -216,3 +216,28 @@ class GameCardDeleteView(LoginRequiredMixin, GameCardOwnershipRequiredMixin, Del
 
     def get_success_url(self, *args, **kwargs):
         return reverse_lazy('players_app:profile', kwargs={'pk': self.request.user.profile.pk})
+
+
+class GameCardListByGameView(LoginRequiredMixin, ListView):
+    model = GameCard
+    template_name = 'gamecard-list-by-game.html'
+    login_url = reverse_lazy('players_app:user_login')
+    context_object_name = 'gamecards'
+    game = None
+
+    def get_queryset(self):
+        game_pk = self.kwargs['game_pk']
+        try:
+            self.game = Game.objects.filter(pk=game_pk).first()
+            if self.game:
+                return GameCard.objects.on_public_profiles(game=self.game)
+            else:
+                messages.error(self.request, f"Game was not found in our database.")
+        except ValueError:
+            messages.error(self.request, "Invalid game ID.")
+        return GameCard.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['game'] = self.game
+        return context

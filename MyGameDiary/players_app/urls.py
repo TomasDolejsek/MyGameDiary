@@ -19,5 +19,6 @@ urlpatterns = [
     path('gamecard-detail/<int:pk>/', GameCardDetailView.as_view(), name='gamecard_detail'),
     path('gamecard-update/<int:pk>/', GameCardUpdateView.as_view(), name='gamecard_update'),
     path('gamecard-delete/<int:pk>/', GameCardDeleteView.as_view(), name='gamecard_delete'),
+    path('gamecard-list-by-game/<int:game_pk>/', GameCardListByGameView.as_view(), name='gamecard_list_by_game'),
 
 ]
