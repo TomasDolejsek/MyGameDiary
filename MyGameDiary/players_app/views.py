@@ -12,6 +12,8 @@ from players_app.forms import PlayerRegistrationForm, GameCardForm
 from players_app.models import GameCard, Profile
 from games_app.models import Game
 
+from django.db.models import Sum
+
 
 class PlayerLoginView(AnonymousRequiredMixin, FormView):
     template_name = 'authentication/user-login.html'
@@ -92,7 +94,7 @@ class ProfileView(LoginRequiredMixin, ProfileNotPrivateRequiredMixin, ListView):
         try:
             self.profile = Profile.objects.filter(pk=self.profile_pk).first()
             if self.profile:
-                return GameCard.objects.on_profile(profile=self.profile)
+                return GameCard.objects.on_profile(profile=self.profile).order_by('game__name')
             else:
                 messages.error(self.request, f"Profile was not found in our database.")
         except ValueError:
@@ -138,6 +140,10 @@ class ProfileListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_profiles'] = Profile.objects.all().count()
+        context['total_private'] = Profile.objects.filter(is_private=True).count()
+        context['total_gamecards'] = GameCard.objects.count()
+        context['total_finished'] = GameCard.objects.filter(is_finished=True).count()
+        context['total_hours'] = GameCard.objects.aggregate(Sum('hours_played'))['hours_played__sum']
         return context
 
     def get_queryset(self):
@@ -155,7 +161,7 @@ class GameCardCreateView(LoginRequiredMixin, ProfileOwnershipRequiredMixin, Redi
 
     def get(self, *args, **kwargs):
         associated_profile = self.request.user.profile
-        associated_game_pk = self.request.GET.get('game_id')
+        associated_game_pk = self.request.GET.get('game_pk')
         try:
             associated_game = Game.objects.filter(pk=associated_game_pk).first()
             if associated_game:
@@ -205,13 +211,15 @@ class GameCardDeleteView(LoginRequiredMixin, GameCardOwnershipRequiredMixin, Del
     login_url = reverse_lazy('players_app:user_login')
     context_object_name = 'gamecard'
     gamecard_pk = None
+    game_name = None
 
     def dispatch(self, *args, **kwargs):
         self.gamecard_pk = self.kwargs['pk']
+        self.game_name = GameCard.objects.filter(pk=self.gamecard_pk).first().associated_game_name
         return super().dispatch(*args, **kwargs)
 
     def post(self, *args, **kwargs):
-        messages.warning(self.request, f"Game Card was removed from your portfolio.")
+        messages.warning(self.request, f"{self.game_name} was removed from your profile.")
         return super().post(*args, **kwargs)
 
     def get_success_url(self, *args, **kwargs):
@@ -230,7 +238,7 @@ class GameCardListByGameView(LoginRequiredMixin, ListView):
         try:
             self.game = Game.objects.filter(pk=game_pk).first()
             if self.game:
-                return GameCard.objects.on_public_profiles(game=self.game)
+                return GameCard.objects.on_public_profiles(game=self.game).order_by('profile__user__username')
             else:
                 messages.error(self.request, f"Game was not found in our database.")
         except ValueError:
@@ -240,4 +248,6 @@ class GameCardListByGameView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['game'] = self.game
+        gamecard = GameCard.objects.about_game(game=self.game).on_profile(profile=self.request.user.profile).first()
+        context['gamecard_pk'] = gamecard.pk if gamecard is not None else None
         return context

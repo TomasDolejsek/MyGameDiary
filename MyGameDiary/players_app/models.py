@@ -37,8 +37,20 @@ class Profile(models.Model):
 
     @property
     def total_hours(self):
-        return GameCard.objects.on_profile(profile=self).aggregate(Sum('hours_played'))['hours_played__sum']
+        hours = GameCard.objects.on_profile(profile=self).aggregate(Sum('hours_played'))['hours_played__sum']
+        if hours is None:
+            hours = 0
+        return hours
 
+    @property
+    def associated_games(self):
+        gamecards = GameCard.objects.on_profile(profile=self)
+        game_info = {
+            'games': [x.game for x in gamecards],
+            'gamecards_pk': gamecards.values_list('pk', flat=True)
+        }
+        print(game_info)
+        return game_info
 
 """
 GameCard Model
@@ -83,6 +95,7 @@ class GameCard(models.Model):
     is_finished = models.BooleanField(default=False)
     hours_played = models.PositiveIntegerField(default=0)
     avatar_names = models.CharField(max_length=100, null=True, blank=True)
+    review_link_url = models.URLField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
 
     objects = GameCardManager()
@@ -92,3 +105,19 @@ class GameCard(models.Model):
 
     def __str__(self):
         return f"{self.profile.user.username} - {self.game.name}"
+
+    @property
+    def associated_game_name(self):
+        return self.game.name
+
+    @property
+    def is_finished_text(self):
+        return 'YES' if self.is_finished else 'NO'
+
+    @property
+    def avatar_names_text(self):
+        return self.avatar_names if self.avatar_names else '---'
+
+    def review_link_text(self):
+        return self.review_link_url if self.review_link_url else '---'
+

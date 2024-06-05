@@ -2,7 +2,15 @@
 {% load static %}
 {% load bootstrap5 %}
 
+ <style>
+    .homepage {
+        background-image: url("{% static '/img/homepage_image.jpg' %}");
+        background-size: cover;
+        height: 100vh;
+        }
+ </style>
 {% block bootstrap5_content %}
+    
     <div class="d-flex flex-column rounded justify-content-center align-items-center
                 p-1 bg-primary border border-dark" style="max-width: 1920px;">
         {% include 'snippets/navbar.html' %}

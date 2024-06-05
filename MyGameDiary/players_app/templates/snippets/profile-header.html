@@ -17,9 +17,9 @@
     {% if user.profile == profile or user.profile.is_admin %}
         <div class="">
             {% if profile.is_private %}
-                <a class="btn btn-warning rounded" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Public</b></a>
+                <a class="btn btn-warning border-white" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Public</b></a>
             {% else %}
-                <a class="btn btn-warning rounded" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Private</b></a>
+                <a class="btn btn-warning border-white" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Private</b></a>
             {% endif %}
         </div>
     {% endif %}

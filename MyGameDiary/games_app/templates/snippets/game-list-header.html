@@ -4,7 +4,7 @@
         <div>Our Game Database</div>
         <div class="fs-5">Total Games: {{ total_games }}</div>
     </div>
-    <div class="d-flex rounded justify-content-center align-items-center fs-4 p-1 text-white" style="width: 35%;">
+    <div class="d-flex rounded justify-content-center align-items-center fs-4 py-1 text-warning" style="width: 35%;">
         <div class="d-flex w-100 fs-6 justify-content-around align-items-center text-center">
             <div class="d-flex flex-column">
                 <div>Total Game Cards:</div>
@@ -20,40 +20,23 @@
             </div>
         </div>
     </div>
+    {% if user.is_authenticated %}
     <div class="d-flex justify-content-end align-items-center text-white fs-6" style="width: 30%;">
         <div class="mx-3">
             Can't Find Your Favorite Game?
         </div>
         <div>
-            <a class="btn btn-danger rounded" href="#"><b>Request a Game!</b></a>
+            <a class="btn btn-danger border border-white" href="#"><b>Request a Game!</b></a>
         </div>
     </div>
-</div>
-
-<!--
-
-
-<div class="d-flex w-100 justify-content-between align-items-center bg-dark p-2 mt-1 rounded">
-    <div class="d-flex justify-content-center align-items-center text-light">
-        <div class="text-uppercase fs-2">
-            Game Database
-        </div>
-    </div>
-    <div class="d-flex text-white fs-5 align-items-center">
+    {% else %}
+    <div class="d-flex justify-content-end align-items-center text-white fs-5" style="width: 30%;">
         <div class="mx-3">
-            Can't Find Your Favorite Game?
+            Do You Want To See More?
         </div>
         <div>
-            <a class="btn btn-warning rounded" href="#"><b>Request a Game!</b></a>
+            <a class="btn btn-primary border border-white" href="{% url 'players_app:user_login' %}"><b>Login</b></a>
         </div>
-    </div>
-    <div>
-        {% if user.profile.is_admin %}
-        <a class="btn btn-danger rounded" href="{% url 'games_app:game_add' %}"><b>Add a New Game</b></a>    
-        {% endif %}
-    </div>
-    <div class="text-white fs-4">
-        Number of Games: {{ total_games }}
-    </div>
+    </div>    
+    {% endif %}
 </div>
--->

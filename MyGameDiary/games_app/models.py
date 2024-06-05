@@ -69,4 +69,7 @@ class Game(models.Model):
 
     def total_hours(self):
         from players_app.models import GameCard
-        return GameCard.objects.about_game(game=self).aggregate(Sum('hours_played'))['hours_played__sum']
+        hours = GameCard.objects.about_game(game=self).aggregate(Sum('hours_played'))['hours_played__sum']
+        if hours is None:
+            hours = 0
+        return hours

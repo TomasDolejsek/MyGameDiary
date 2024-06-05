@@ -2,11 +2,29 @@
 {% load bootstrap5 %}
 
 {% block content %}
-    <div class="d-flex w-100 flex-column justify-content-center align-items-center rounded mt-2 mb-1">
-        <div class="d-flex w-25 flex-column bg-dark justify-content-center align-items-center border border-5 border-danger rounded p-3">
-            <div class="d-flex flex-column">
+    
+    <div class="d-flex w-100 bg-dark justify-content-center align-items-center rounded p-2 mt-1">
+        <div class="d-flex w-50 flex-column bg-dark justify-content-center align-items-center
+             border border-5 border-danger rounded p-3">
+             <div class="d-flex w-100 justify-context-around align-items-center">
+                <div class="w-25">
+                    <a href="{% url 'games_app:game_detail' gamecard.game.pk %}">
+                        <img src="{{  gamecard.game.cover_url }}" alt="{{ gamecard.game.name }} cover" width="150" height="150"
+                             class="border rounded-3">
+                    </a>    
+                </div>
+                <div class="d-flex w-75 flex-column">
+                    <div class="d-text justify-content-start text-white text-uppercase fs-3">
+                    {{ gamecard.game.name }}
+                    </div>
+                    <div class="mt-3">
+                        <a class="btn btn-success border border-white" href="{% url 'players_app:gamecard_detail' gamecard.pk %}"><b>My Game Card</b></a>
+                    </div>
+                </div>
+             </div>
+            <div class="d-flex flex-column mt-3">
                 <div class="fs-2 text-white text-center">
-                Are you sure you want to remove this game from your portfolio?
+                Are you sure you want to remove this game from your profile?
                 </div>
                 <div class="fs-3 text-danger text-center my-3 py-1 bg-white rounded">
                     <b>You will lose all your data!</b>
@@ -17,10 +35,11 @@
             </div>
             <div class="d-flex justify-content-around">
                 <form action="." method="POST"> {% csrf_token %}
-                    <button type="submit" class="btn btn-danger me-4">DELETE</button>
-                    <a class="btn btn-primary" href="{% url 'players_app:profile' user.profile.pk %}">CANCEL</a>
+                    <button type="submit" class="btn btn-danger me-4 border border-white"><b>DELETE</b></button>
+                    <a class="btn btn-primary border border-white" href="{% url 'players_app:profile' user.profile.pk %}"><b>CANCEL</b></a>
                 </form>
             </div>
         </div>    
     </div>
+
 {% endblock %}

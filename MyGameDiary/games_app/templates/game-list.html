@@ -3,43 +3,51 @@
 
 {% block content %}
     {% include 'snippets/game-list-header.html' %}
-    {% for game in games %}
-        <div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 rounded mt-1">
-            <div style="width: 6%;">
-                <a href="{% url 'games_app:game_detail' game.pk %}">
-                    <img src="{{  game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100"
+    {% for game_data in games_data %}
+        <div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 mt-1 rounded">
+            <div style="width: 8%;">
+                <a href="{% url 'games_app:game_detail' game_data.game.pk %}">
+                    <img src="{{  game_data.game.cover_url }}" alt="{{ game_data.game.name }} cover" width="100" height="100"
                          class="border rounded">
                 </a>
             </div>
-            <div class="text-white text-uppercase ps-1 fs-5" style="width: 29%;">
-                <a class="text-white" href="{% url 'games_app:game_detail' game.pk %}">{{ game.name }}</a> ({{ game.year }})
+            <div class="text-white text-uppercase fs-5" style="width: 27%;">
+                <a class="text-white" href="{% url 'games_app:game_detail' game_data.game.pk %}">
+                   {{ game_data.game.name }}</a> ({{ game_data.game.year }})
             </div>
-            <div class="d-flex rounded justify-content-center align-items-center fs-4 p-1 text-white" style="width: 35%;">
+            <div class="d-flex rounded justify-content-center align-items-center fs-4 text-white" style="width: 35%;">
                 <div class="d-flex w-100 fs-6 justify-content-around align-items-center text-center">
                     <div class="d-flex flex-column">
                         Game Cards:<br> 
-                        <h3 class="mt-1">{{ game.total_gamecards }}</h3>
+                        <h3 class="mt-1">{{ game_data.game.total_gamecards }}</h3>
                     </div>
                     <div class="d-flex flex-column">
                         Finished:<br>
-                        <h3 class="mt-1">{{ game.total_finished }}</h3>
+                        <h3 class="mt-1">{{ game_data.game.total_finished }}x</h3>
                     </div>
                     <div class="d-flex flex-column">
                         Hours Played:<br>
-                        <h3 class="mt-1">{{ game.total_hours }}</h3>
+                        <h3 class="mt-1">{{ game_data.game.total_hours }}</h3>
                     </div>                     
                 </div>
             </div>
-            <div class="d-flex justify-content-end align-items-center" style="width: 30%;">
-                <div class="">
-                    <a class="btn btn-primary" href="{% url 'players_app:gamecard_list_by_game' game.pk %}"><b>Show Game Cards</b></a>
-                </div>
-                {% if user.is_authenticated %}
-                <div class="ms-2">
-                    <a class="btn btn-warning" href="{% url 'players_app:gamecard_create' %}?game_id={{ game.id }}&profile_pk={{ user.profile.pk }}"><b>Add to My Profile</b></a>
-                </div>
+            {% if user.is_authenticated %}
+                <div class="d-flex justify-content-between align-items-center" style="width: 30%;">
+                    <div class="d-flex justify-content-end" style="width: 60%;">
+                        <a class="btn btn-primary border border-white" href="{% url 'players_app:gamecard_list_by_game' game_data.game.pk %}"><b>All Game Cards</b></a>
+                    </div>
+                {% if not game_data.gamecard_pk %}
+                    <div class="d-flex justify-content-end" style="width: 40%;">
+                        <a class="btn btn-warning border border-white" href="{% url 'players_app:gamecard_create' %}?game_pk={{ game_data.game.pk }}&profile_pk={{ user.profile.pk }}"><b>Add to My Profile</b></a>
+                    </div>
+                {% else %}
+                    <div class="d-flex justify-content-center" style="width: 37%;">
+                        <a class="btn btn-success border border-white" href="{% url 'players_app:gamecard_detail' game_data.gamecard_pk %}"><b>My Game Card</b></a>
+                    </div>
                 {% endif %}
-            </div>
+                </div>
+            {% endif %}
         </div>
     {%  endfor  %}
 {% endblock %}
+

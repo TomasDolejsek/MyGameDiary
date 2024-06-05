@@ -13,6 +13,11 @@
                         <a class="nav-link text-white" href="{% url 'players_app:profile_list' %}">Our Players</a>
                     </li>
                 {% endif %}
+                {% if user.profile.is_admin %}
+                    <li>
+                        <a class="nav-link text-warning" href="{% url 'games_app:game_add' %}">Add a New Game</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
         <div class="collapse navbar-collapse">
@@ -25,8 +30,11 @@
                        <a class="nav-link text-white" href="{% url 'players_app:user_register' %}">Register</a>
                     </li>
                 {% else %}
+                    <div class="d-flex align-items-center">
+                    {% include 'snippets/profile-logo-small.html' %}
+                    </div>
                     <span class="navbar-text text-white">
-                        Welcome, {{ user }}
+                        {{ user }}
                     </span>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'players_app:profile' user.profile.pk %}">My Games</a>
