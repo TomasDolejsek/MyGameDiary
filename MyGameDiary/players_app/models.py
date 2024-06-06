@@ -95,7 +95,7 @@ class GameCard(models.Model):
     is_finished = models.BooleanField(default=False)
     hours_played = models.PositiveIntegerField(default=0)
     avatar_names = models.CharField(max_length=100, null=True, blank=True)
-    review_link_url = models.URLField(null=True, blank=True)
+    review_link = models.URLField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
 
     objects = GameCardManager()
@@ -119,5 +119,5 @@ class GameCard(models.Model):
         return self.avatar_names if self.avatar_names else '---'
 
     def review_link_text(self):
-        return self.review_link_url if self.review_link_url else '---'
+        return self.review_link if self.review_link else '---'
 

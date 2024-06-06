@@ -4,6 +4,7 @@ from players_app.mixins import UserRightsMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, ListView
+from django.utils.datastructures import MultiValueDictKeyError
 
 from games_app.forms import GameSearchApiForm
 from games_app.api_utils import find_game_id, save_game, save_to_file
@@ -44,7 +45,6 @@ class GameSaveView(LoginRequiredMixin, UserRightsMixin, TemplateView):
     context_object_name = 'games'
     login_url = reverse_lazy('players_app:user_login')
     allowed_groups = ['Admin']
-    game_title = None
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -52,24 +52,32 @@ class GameSaveView(LoginRequiredMixin, UserRightsMixin, TemplateView):
         return context
 
     def get(self, *args, **kwargs):
-        self.game_title = kwargs['game_title']
+        game_title = kwargs['game_title']
         context = self.get_context_data()
         if context['user_has_rights']:
-            games = find_game_id(self.game_title)
-            context.update({'game_title': self.game_title, 'games': games})
+            games = find_game_id(game_title)
+            context.update({
+                'game_title': game_title,
+                'games': games,
+                'total_games': len(games)
+            })
         return render(self.request,
                       template_name=self.template_name,
                       context=context)
 
     def post(self, *args, **kwargs):
-        game_to_save = self.request.POST['game_to_save']
-        game_id = game_to_save.split(',')[0]
-        if save_game(game_id):
-            save_to_file(game_to_save)
-            messages.success(self.request, f"{self.game_title} successfully saved.")
-        else:
-            messages.error(self.request, f"{self.game_title} is already in the database.")
-        return redirect(reverse_lazy('games_app:game_list'))
+        try:
+            game_to_save = self.request.POST['game_to_save']
+            game_id, game_title = game_to_save.split(',')
+            if save_game(game_id):
+                save_to_file(game_to_save)
+                messages.success(self.request, f"{game_title} successfully saved.")
+            else:
+                messages.error(self.request, f"{game_title} is already in the database.")
+            return redirect(reverse_lazy('games_app:game_list'))
+        except MultiValueDictKeyError:
+            messages.error(self.request, "No Game Was Selected.")
+            return redirect(reverse_lazy('games_app:game_list'))
 
 
 class GameListView(ListView):

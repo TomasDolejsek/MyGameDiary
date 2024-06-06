@@ -22,14 +22,14 @@
             <div class="d-flex justify-content-start align-items-center">
                 <div class="d-flex justify-content-end">
                     <div>
-                        <a class="btn btn-primary" href="{% url 'players_app:gamecard_detail' gamecard.pk %}"><b>Detail</b></a>
+                        <a class="btn btn-primary" href="{% url 'players_app:gamecard_detail' gamecard.pk %}"><b>Show Card</b></a>
                     </div>
                     {% if user.profile == profile or user.profile.is_admin %}
                         <div class="px-2">
-                            <a class="btn btn-warning" href="{% url 'players_app:gamecard_update' gamecard.pk %}"><b>Update</b></a>
+                            <a class="btn btn-warning" href="{% url 'players_app:gamecard_update' gamecard.pk %}"><b>Update Card</b></a>
                         </div>
                         <div>
-                            <a class="btn btn-danger" href="{% url 'players_app:gamecard_delete' gamecard.pk %}"><b>Delete</b></a>
+                            <a class="btn btn-danger" href="{% url 'players_app:gamecard_delete' gamecard.pk %}"><b>Delete Card</b></a>
                         </div>
                     {% endif %}
                 </div>

@@ -34,3 +34,6 @@
 673,Doom
 280,Doom 3
 5,Baldur's Gate
+1162,Tomb Raider: Anniversary
+129,Warcraft: Orcs & Humans
+39,Mafia

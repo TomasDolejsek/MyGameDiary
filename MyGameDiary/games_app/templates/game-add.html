@@ -5,30 +5,53 @@
     {% if user_has_rights %}
         <div class="d-flex justify-content-center w-100 bg-dark mt-1 rounded text-white">
             {% if not games %}
-             <form class="p-4 d-flex text-white flex-column justify-content-center align-items-center" action="." method="POST"> {% csrf_token %}
-                 <div class="text-white">
-                     <label for="search_game">{{ form.name.label }}</label>
-                     {{ form.name }}
-                 </div>    
-                 <div> 
-                     <small id="nameHelpText" class="form-text text-white">
-                        {{ form.name.help_text }}
-                     </small>
-                 </div>
-                 <div class="d-flex w-100 justify-content-end mt-3 pe-5">
-                     <input class="btn btn-primary rounded me-3" type="submit" value="Search">
-                     <a class="btn btn-warning rounded" href="{% url 'games_app:game_list' %}">Cancel</a>
-                 </div>   
-             </form>
+                <form class="p-4 d-flex text-white flex-column justify-content-center align-items-center" action="." method="POST"> {% csrf_token %}
+                     <div class="d-flex align-items-center text-white fs-5">
+                         <label for="search_game">{{ form.name.label }}</label>
+                        <div class="ms-2">{{ form.name }}</div>
+                    </div>
+                    <div class="d-flex w-100 justify-content-end mt-3 pe-4 me-4">
+                         <input class="btn btn-warning rounded me-4 border border-white" type="submit" value="SEARCH">
+                        <a class="btn btn-primary rounded border border-white" href="{% url 'games_app:game_list' %}">CANCEL</a>
+                    </div>   
+                </form>
             {% else %}
-            <h5>Pick a game to save:</h5>
-            <form action="/games/game-add/{{ game_title }}" method="POST"> {% csrf_token %}
-                {% for game in games %}
-                <input type="radio" id="{{ game.id }}" name="game_to_save" value="{{ game.id }},{{ game.name }}">
-                <label for="{{ game.id }}">{{ game.id }} - {{ game.name }}</label><br>
-                {% endfor %}
-                <input type="submit" value="Save this game!">
-            </form>
+                <div class="d-flex w-75 justify-content-start flex-column align-items-start mt-1 p-2">
+                    <form class="ps-4 pt-2 fs-4 w-100" action="/games/game-add/{{ game_title }}" method="POST"> {% csrf_token %}
+                        <div class="d-flex mb-3">
+                            <div class="text-uppercase fs-3 me-5">Results: {{ total_games }} Games Found</div>
+                            <button class="btn btn-warning rounded border border-white me-4" type="submit"><b>Save Selected Game</b></button>
+                            <a class="btn btn-primary rounded border border-white" href="{% url 'games_app:game_list' %}"><b>Cancel</b></a>
+                        </div>
+                        <div class="border border-white rounded w-100 fs-4 px-4 py-3">
+                            <div class="row w-100 text-warning">
+                                <div class="col-2 text-center">
+                                    ID
+                                </div>
+                                <div class="col-8">
+                                    GAME TITLE
+                                </div>
+                                <div class="col">
+                                    YEAR
+                                </div>
+                            </div>
+                            {% for game in games %}
+                                <div class="row w-100 mt-2">
+                                    <div class="col-2">
+                                        <input class="fs-5 me-4" type="radio" id="{{ game.id }}" name="game_to_save" value="{{ game.id }},{{ game.name }}">
+                                        {{ game.id }}
+                                    </div>
+                                    <div class="col-8">
+                                        {{ game.name }}
+                                    </div>
+                                    <div class="col">
+                                        {{ game.year }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
             {% endif %}
         </div>
     {% else %}

@@ -202,7 +202,8 @@ class GameCardUpdateView(LoginRequiredMixin, GameCardOwnershipRequiredMixin, Upd
         return super().dispatch(*args, **kwargs)
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_lazy('players_app:profile', kwargs={'pk': self.request.user.profile.pk})
+        messages.success(self.request, "Game Card Successfully Updated.")
+        return reverse_lazy('players_app:gamecard_detail', kwargs={'pk': self.gamecard_pk})
 
 
 class GameCardDeleteView(LoginRequiredMixin, GameCardOwnershipRequiredMixin, DeleteView):

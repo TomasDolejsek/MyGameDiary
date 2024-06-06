@@ -3,14 +3,16 @@
 
 {% block content %}
     <div class="d-flex w-100 justify-content-center align-items-center bg-dark mt-1 p-2 rounded">
-        <div class="d-flex w-50 flex-column justify-content-between border border-white border-2 rounded p-3">
+        <div class="d-flex flex-column justify-content-between border border-white border-2 rounded p-3"
+             style="width: 60%;">
             <div class="d-flex w-100 justify-content-between align-items-center">
                 {% if gamecard.profile == user.profile %}
                     <div class="d-flex w-50 justify-content-start align-items-center">
-                        
-                        <a class="btn btn-primary me-4 border border-white" href="{% url 'players_app:gamecard_update' gamecard.pk %}"><b>Update Card</b></>
                         <a class="btn btn-danger border border-white" href="{% url 'players_app:gamecard_delete' gamecard.pk %}"><b>Delete Card</b></a>
+                        <a class="btn btn-primary ms-4 border border-white" href="{% url 'players_app:gamecard_update' gamecard.pk %}"><b>Update Card</b></a>
                     </div>
+                {% else %}
+                    <div class="w-50"></div>
                 {% endif %}
                 <div class="d-flex w-50 justify-content-end align-items-center">
                     <div>
@@ -28,7 +30,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between">
-                <div class="d-flex flex-column justify-content-between text-white p-2" style="width: 60%;">
+                <div class="d-flex flex-column justify-content-between text-white p-2" style="width: 70%;">
                     <div class="row w-100 align-items-center">
                         <div class="col fs-4">
                             Game Finished?
@@ -67,14 +69,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex" style="width: 40%;">
+                <div style="width: 30%;">
                     <a href="{% url 'games_app:game_detail' gamecard.game.pk %}">
                         <img src="{{  gamecard.game.cover_url }}" alt="{{ gamecard.game.name }} cover" width="200" height="200"
                              class="border border-white border-2 rounded-3">
                     </a>
                 </div>
             </div>
-            <div class="d-flex w-100 flex-column justify-content-center fs-3 text-white mt-3 px-2 border border-white rounded">
+            <div class="d-flex w-100 flex-column justify-content-center fs-3 text-white mt-3 px-2
+                 border border-white rounded">
                 <b>Notes:</b>
                 <div class="rounded p-1 fs-4">
                     {% if gamecard.notes %}

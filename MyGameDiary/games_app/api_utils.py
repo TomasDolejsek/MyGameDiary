@@ -75,13 +75,23 @@ def find_game_id(name, url=api_url):
     endpoint = 'games'
     headers = {'Client-ID': client_id,
                'Authorization': 'Bearer ' + access_token}
-    data = f'fields id, name; search "{name}"; limit 100;'
+    data = f'fields id, name, first_release_date; search "{name}"; limit 100;'
 
     response = requests.post(url + endpoint, headers=headers, data=data)
-    games = response.json()
-    print(len(games))
+    data = response.json()
+
+    games = []
+    for game in data:
+        if 'first_release_date' not in game:
+            continue
+        game_data = {}
+        game_data['id'] = game['id']
+        game_data['name'] = game['name']
+        game_data['year'] = convert_to_year(game['first_release_date'])
+        games.append(game_data)
+
     for game in games:
-        print(f"id: {game['id']} - '{game['name']}'")
+        print(f"id: {game['id']} - '{game['name']}' ({game['year']})")
     return games
 
 
@@ -96,6 +106,8 @@ def get_game_data(game_id, url=api_url):
     data = response.json()[0]
     if 'player_perspectives' not in data:
         data['player_perspectives'] = []
+    if 'rating' not in data:
+        data['rating'] = None
     game_data = {'id': data['id'],
                  'name': data['name'],
                  'cover_url': get_game_cover_url(game_id),

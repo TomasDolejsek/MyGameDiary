@@ -1,11 +1,13 @@
 from django import forms
 
-from games_app.models import Game
-
 
 class GameSearchApiForm(forms.Form):
     name = forms.CharField(max_length=64,
+                           min_length=3,
                            label="Search Game:",
                            help_text="Enter the game's title",
-                           widget=forms.TextInput(),
+                           widget=forms.TextInput(attrs={
+                                'placeholder': "Game Title",
+                                'class': 'form-control',
+                           }),
                            required=True)
