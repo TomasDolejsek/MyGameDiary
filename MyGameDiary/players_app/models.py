@@ -49,8 +49,8 @@ class Profile(models.Model):
             'games': [x.game for x in gamecards],
             'gamecards_pk': gamecards.values_list('pk', flat=True)
         }
-        print(game_info)
         return game_info
+
 
 """
 GameCard Model

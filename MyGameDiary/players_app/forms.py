@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, CheckboxInput
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group
 
@@ -23,3 +23,7 @@ class GameCardForm(ModelForm):
     class Meta:
         model = GameCard
         fields = '__all__'
+
+        widgets = {
+                'is_finished': CheckboxInput(attrs={'style': 'width:30px;height:30px;'}),
+            }
