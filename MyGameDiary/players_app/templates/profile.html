@@ -11,34 +11,34 @@
                          class="border rounded">
                 </a>
             </div>
-            <div class="text-white text-uppercase fs-5" style="width: 29%;">
+            <div class="text-white text-uppercase fs-5" style="width: 32%;">
                 <a class="text-white" href="{% url 'games_app:game_detail' gamecard.game.pk %}">
                    {{ gamecard.game.name }}</a> ({{ gamecard.game.year }})
             </div>
             <div class="d-flex rounded justify-content-center align-items-center fs-4 p-1 text-white" style="width: 30%;">
                 <div class="d-flex w-100 fs-6 justify-content-around align-items-center text-center">
                     {% if gamecard.is_finished %}
-                        <div>
+                        <div class="w-50">
                             Finished:<br>
                             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="lightgreen" class="bi bi-check" viewBox="0 0 16 16">
                                 <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
                             </svg>
                         </div>
                     {% else %}
-                        <div>
+                        <div class="w-50">
                             Finished:<br>
                             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="red" class="bi bi-x" viewBox="0 0 16 16">
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                             </svg>
                         </div>
                     {% endif %}
-                    <div class="d-flex flex-column">
+                    <div class="d-flex flex-column w-50">
                         Hours Played:<br>
                         <h3 class="mt-1">{{ gamecard.hours_played }}</h3>
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-end align-items-center" style="width: 35%;">
+            <div class="d-flex justify-content-end align-items-center" style="width: 32%;">
                 <div class="d-flex justify-content-end">
                     <div>
                         <a class="btn btn-primary border border-white" href="{% url 'players_app:gamecard_detail' gamecard.pk %}"><b>Show Card</b></a>

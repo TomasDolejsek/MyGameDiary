@@ -1,12 +1,12 @@
 <!-- Game Card List Header -->
-<div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 rounded mt-1">
+<div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 mt-1 rounded">
     <div style="width: 8%;">
         <a href="{% url 'games_app:game_detail' game.pk %}">
             <img src="{{  game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100"
                  class="border rounded-3">
         </a>    
     </div>
-    <div class="d-text justify-content-start text-white text-uppercase fs-3 ps-1" style="width: 34%;">
+    <div class="d-text justify-content-start text-white text-uppercase fs-3 ps-1" style="width: 32%;">
         <div>{{ game.name }}</div>
         <div class="fs-5">Total Game Cards: {{ game.total_gamecards }} ({{ game.private_gamecards }} private)</div>
     </div>
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div class="d-flex justify-content-end align-items-center" style="width: 28%;">
+    <div class="d-flex justify-content-center align-items-center" style="width: 30%;">
         {% if not gamecard_pk %}
             <a class="btn btn-warning border-white" href="{% url 'players_app:gamecard_create' %}?game_pk={{ game.pk }}&profile_pk={{ user.profile.pk }}"><b>Add to My Profile</b></a>
         {% else %}
