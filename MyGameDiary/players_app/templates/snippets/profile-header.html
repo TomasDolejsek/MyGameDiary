@@ -1,21 +1,29 @@
 <!-- Profile Header -->
 <div class="d-flex w-100 justify-content-between align-items-center bg-dark p-2 mt-1 rounded">
-    <div class="d-flex justify-content-center align-items-center text-light">
-        {% include 'snippets/profile-logo.html' %}
-        <div class="text-uppercase fs-2 ms-2">
-            {{ profile.user.username }}'s Game Cards
+    <div class="d-text flex-column justify-content-start text-white ps-1" style="width: 50%;">
+        <div class="d-flex w-100 justify-content-start align-items-center">
+            <div class="d-flex">
+                {% include 'snippets/profile-logo.html' %}
+                <div class="text-uppercase fs-2">
+                    {{ profile.user.username }}'s Game Cards
+                </div>
+            </div>
         </div>
-        {% if profile.is_private %}
-            <div class="badge bg-danger text-white mx-4">
-                private
-            </div>
-        {% else %}
-            <div class="badge bg-success text-white mx-4">
-                public
-            </div>
-        {% endif %}
+        <div class="text-white fs-5 text-uppercase">
+            Number of Game Cards: {{ total_gamecards }}
+        </div>
+    </div>
     {% if user.profile == profile or user.profile.is_admin %}
-        <div class="">
+        <div>
+            {% if profile.is_private %}
+                <div class="badge bg-danger text-white mx-3 mt-1">
+                    private profile
+                </div>
+            {% else %}
+                <div class="badge bg-success text-white mx-3 mt-1">
+                    public profile
+                </div>
+            {% endif %}
             {% if profile.is_private %}
                 <a class="btn btn-warning border-white" href="{% url 'players_app:profile_change_privacy' %}?profile_pk={{ profile.user.pk }}"><b>Make Profile Public</b></a>
             {% else %}
@@ -23,9 +31,5 @@
             {% endif %}
         </div>
     {% endif %}
-    </div>
-    <div class="text-white fs-4">
-        Number of Game Cards: {{ total_gamecards }}
-    </div>
 </div>
  

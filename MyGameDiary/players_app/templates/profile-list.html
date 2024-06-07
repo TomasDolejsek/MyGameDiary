@@ -11,20 +11,20 @@
         {% else %}
         <div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 mt-1 rounded">
         {% endif %}
-                <div style="width: 8%;">
+                <div style="width: 4%;">
                     {% include 'snippets/profile-logo.html' %}
                 </div>
                 {% if not profile.is_private %}
-                    <a class="d-flex text-uppercase text-white fs-5" style="width: 27%;"
+                    <a class="d-flex text-uppercase text-white fs-5" style="width: 31%;"
                        href="{% url 'players_app:profile' profile.pk%}">
                         {{ profile.user.username }}
                     </a>
                 {% else %}
-                    <div class="d-flex text-uppercase text-white fs-5" style="width: 27%;">
+                    <div class="d-flex text-uppercase text-white fs-5" style="width: 30%;">
                         {{ profile.user.username }}
                     </div>   
                 {% endif %}
-                <div class="d-flex rounded justify-content-center align-items-center py-3 text-white" style="width: 35%;">
+                <div class="d-flex rounded justify-content-center align-items-center py-3 text-white" style="width: 40%;">
                     {% if not profile.is_private %}
                     <div class="d-flex w-100 fs-6 justify-content-around align-items-center text-center">
                         <div class="d-flex flex-column">
@@ -47,11 +47,11 @@
                     {% endif %}
                 </div>
             {% if not profile.is_private or user.profile.is_admin %}
-            <div class="d-flex justify-content-center" style="width: 30%;">
+            <div class="d-flex justify-content-center" style="width: 25%;">
                 <a class="btn btn-primary border border-white" href="{% url 'players_app:profile' profile.pk %}"><b>Peek at Profile</b></a>
             </div>
             {% else %}
-            <div style="width: 30%;"></div>   
+            <div style="width: 25%;"></div>   
             {% endif %}
         </div>
     {%  endfor  %}

@@ -4,32 +4,51 @@
 {% block content %}
     {% include 'snippets/profile-header.html' %}
     {% for gamecard in gamecards %}
-        <div class="d-flex w-100 justify-content-between align-items-center bg-dark rounded p-2 mt-1">
-            <div class="d-flex align-items-center">
-                <div class="d-flex">
-                    <img src="{{  gamecard.game.cover_url }}" alt="{{ game.name }} cover" width="100" height="100"
-                         class="border rounded-3">
-                </div>
-                <div class="text-white text-uppercase px-4 fs-5">
-                    {{ gamecard.game.name }}
-                </div>
-                <div>
+        <div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 mt-1 rounded">
+            <div style="width: 6%;">
+                <a href="{% url 'games_app:game_detail' gamecard.game.pk %}">
+                    <img src="{{  gamecard.game.cover_url }}" alt="{{ gamecard.game.name }} cover" width="100" height="100"
+                         class="border rounded">
+                </a>
+            </div>
+            <div class="text-white text-uppercase fs-5" style="width: 29%;">
+                <a class="text-white" href="{% url 'games_app:game_detail' gamecard.game.pk %}">
+                   {{ gamecard.game.name }}</a> ({{ gamecard.game.year }})
+            </div>
+            <div class="d-flex rounded justify-content-center align-items-center fs-4 p-1 text-white" style="width: 30%;">
+                <div class="d-flex w-100 fs-6 justify-content-around align-items-center text-center">
                     {% if gamecard.is_finished %}
-                    <span class="badge rounded-pill bg-success">Finished</span>
+                        <div>
+                            Finished:<br>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="lightgreen" class="bi bi-check" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                            </svg>
+                        </div>
+                    {% else %}
+                        <div>
+                            Finished:<br>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="red" class="bi bi-x" viewBox="0 0 16 16">
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </div>
                     {% endif %}
+                    <div class="d-flex flex-column">
+                        Hours Played:<br>
+                        <h3 class="mt-1">{{ gamecard.hours_played }}</h3>
+                    </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-start align-items-center">
+            <div class="d-flex justify-content-end align-items-center" style="width: 35%;">
                 <div class="d-flex justify-content-end">
                     <div>
-                        <a class="btn btn-primary" href="{% url 'players_app:gamecard_detail' gamecard.pk %}"><b>Show Card</b></a>
+                        <a class="btn btn-primary border border-white" href="{% url 'players_app:gamecard_detail' gamecard.pk %}"><b>Show Card</b></a>
                     </div>
                     {% if user.profile == profile or user.profile.is_admin %}
                         <div class="px-2">
-                            <a class="btn btn-warning" href="{% url 'players_app:gamecard_update' gamecard.pk %}"><b>Update Card</b></a>
+                            <a class="btn btn-warning border border-white" href="{% url 'players_app:gamecard_update' gamecard.pk %}"><b>Update Card</b></a>
                         </div>
                         <div>
-                            <a class="btn btn-danger" href="{% url 'players_app:gamecard_delete' gamecard.pk %}"><b>Delete Card</b></a>
+                            <a class="btn btn-danger border border-white" href="{% url 'players_app:gamecard_delete' gamecard.pk %}"><b>Delete Card</b></a>
                         </div>
                     {% endif %}
                 </div>
