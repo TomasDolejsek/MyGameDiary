@@ -11,11 +11,11 @@
         {% else %}
         <div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 mt-1 rounded">
         {% endif %}
-                <div style="width: 4%;">
+                <div style="width: 5%;">
                     {% include 'snippets/profile-logo.html' %}
                 </div>
                 {% if not profile.is_private %}
-                    <a class="d-flex text-uppercase text-white fs-5" style="width: 31%;"
+                    <a class="d-flex text-uppercase text-white fs-5" style="width: 30%;"
                        href="{% url 'players_app:profile' profile.pk%}">
                         {{ profile.user.username }}
                     </a>

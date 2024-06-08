@@ -5,10 +5,10 @@
     {% include 'snippets/gamecard-list-header.html' %}
     {% for gamecard in gamecards %}
         <div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 mt-1 rounded">
-            <div style="width: 4%;">
+            <div style="width: 5%;">
                 {% include 'snippets/profile-logo.html' %}
             </div>
-            <div class="d-text justify-content-start text-uppercase fs-5" style="width: 36%;">
+            <div class="d-text justify-content-start text-uppercase fs-5" style="width: 35%;">
                 <a class="text-white" href="{% url 'players_app:profile' gamecard.profile.user.pk %}">{{ gamecard.profile.user.username }}</a>
             </div>
             <div class="d-flex rounded justify-content-center align-items-center fs-4 p-1 text-white" style="width: 30%;">

@@ -37,3 +37,6 @@
 1162,Tomb Raider: Anniversary
 129,Warcraft: Orcs & Humans
 39,Mafia
+2155,Dark Souls
+11800,Divinity: Original Sin II
+5082,Divinity: Original Sin

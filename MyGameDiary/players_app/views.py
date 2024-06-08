@@ -7,8 +7,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from players_app.mixins import (AnonymousRequiredMixin, ProfileOwnershipRequiredMixin, ProfileNotPrivateRequiredMixin,
                                 GameCardOwnershipRequiredMixin, GameCardNotPrivateRequiredMixin)
-from django.contrib.auth.forms import AuthenticationForm
-from players_app.forms import PlayerRegistrationForm, GameCardForm
+
+from players_app.forms import PlayerRegistrationForm, PlayerAuthenticationForm, GameCardForm
 from players_app.models import GameCard, Profile
 from games_app.models import Game
 
@@ -17,7 +17,7 @@ from django.db.models import Sum
 
 class PlayerLoginView(AnonymousRequiredMixin, FormView):
     template_name = 'authentication/user-login.html'
-    form_class = AuthenticationForm
+    form_class = PlayerAuthenticationForm
 
     def form_valid(self, form):
         username = form.cleaned_data['username']
