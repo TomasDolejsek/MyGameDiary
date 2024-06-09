@@ -18,7 +18,7 @@
                         </li>
                     {% else %}
                         <li>
-                            <a class="nav-link text-warning" href="{% url 'players_app:request_create' %}">View Requests</a>
+                            <a class="nav-link text-warning" href="{% url 'players_app:request_list' %}?display=active">View Requests</a>
                         </li>
                     {% endif %}    
                 {% endif %}

@@ -115,7 +115,7 @@ class GameListView(ListView):
         display = self.request.GET.get('display')
         if display == 'all':
             return Game.objects.all()
-        return Game.objects.starts_with(letter=display).order_by('name')
+        return Game.objects.starts_with(letter=display)
 
 
 class GameDetailView(DetailView):

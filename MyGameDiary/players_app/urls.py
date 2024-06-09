@@ -11,6 +11,9 @@ urlpatterns = [
 
     # PlayerRequest views
     path('request-create/', PlayerRequestCreateView.as_view(), name='request_create'),
+    path('request-list/', PlayerRequestListView.as_view(), name='request_list'),
+    path('request-switch/<int:pk>/', PlayerRequestSwitchView.as_view(), name='request_switch'),
+
 
     # Profile views
     path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),

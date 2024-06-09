@@ -16,6 +16,9 @@ class Profile(models.Model):
     register_date = models.DateField(default=datetime.today)
     is_private = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['user__username']
+
     def __str__(self):
         return f"{self.user}"
 
@@ -75,7 +78,7 @@ class GameCardQuerySet(models.QuerySet):
         return GameCard.objects.none()
 
     def starts_with(self, letter):
-        return self.filter(game__name__istartswith=letter)
+        return self.filter(game__clear_name__istartswith=letter)
 
 
 class GameCardManager(models.Manager):
@@ -107,6 +110,7 @@ class GameCard(models.Model):
     objects = GameCardManager()
 
     class Meta:
+        ordering = ['game__clear_name', ]
         unique_together = (('profile', 'game'),)
 
     def __str__(self):
@@ -139,8 +143,11 @@ class PlayerRequestQuerySet(models.QuerySet):
             return self.filter(profile=profile)
         return PlayerRequest.objects.none()
 
-    def still_active(self):
+    def pending(self):
         return self.filter(active=True)
+
+    def solved(self):
+        return self.filter(active=False)
 
 
 class PlayerRequestManager(models.Manager):
@@ -150,8 +157,11 @@ class PlayerRequestManager(models.Manager):
     def by_profile(self, profile):
         return self.get_queryset().by_profile(profile)
 
-    def still_active(self):
-        return self.get_queryset().still_active()
+    def pending(self):
+        return self.get_queryset().pending()
+
+    def solved(self):
+        return self.get_queryset().solved()
 
 
 class PlayerRequest(models.Model):

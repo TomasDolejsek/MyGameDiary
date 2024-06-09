@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
-from players_app.models import Profile, GameCard
+from players_app.models import Profile, GameCard, PlayerRequest
 
 
 class UserRightsMixin:
@@ -84,7 +84,8 @@ class GameCardNotPrivateRequiredMixin(UserPassesTestMixin):
         try:
             self.gamecard = GameCard.objects.filter(pk=self.gamecard_pk).first()
             if self.gamecard:
-                return user_profile.is_admin or self.gamecard.profile == user_profile or not self.gamecard.profile.is_private
+                return (user_profile.is_admin or self.gamecard.profile == user_profile
+                        or not self.gamecard.profile.is_private)
             else:
                 messages.error(self.request, f"Gamecard was not found in our database.")
         except ValueError:
@@ -93,4 +94,16 @@ class GameCardNotPrivateRequiredMixin(UserPassesTestMixin):
 
     def handle_no_permission(self):
         messages.error(self.request, "This gamecard is private.")
+        return redirect(reverse_lazy('homepage'))
+
+
+class LimitPendingRequestsMixin(UserPassesTestMixin):
+    def test_func(self):
+        profile = self.request.user.profile
+        profile_requests = PlayerRequest.objects.by_profile(profile=profile).pending().count()
+        return profile_requests < self.max_requests
+
+    def handle_no_permission(self):
+        messages.error(self.request, f"Limit of your pending requests ({self.max_requests}) reached."
+                                     f" Please wait until some of them are solved.")
         return redirect(reverse_lazy('homepage'))

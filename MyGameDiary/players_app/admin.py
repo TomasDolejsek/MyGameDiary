@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from players_app.models import Profile, GameCard
+from players_app.models import Profile, GameCard, PlayerRequest
 
 
 @admin.register(GameCard)
@@ -32,6 +32,21 @@ class ProfileAdmin(admin.ModelAdmin):
     @admin.display(description='Groups')
     def get_groups(self, obj):
         return list(obj.user.groups.all().values_list('name', flat=True))
+
+
+@admin.register(PlayerRequest)
+class PlayerRequestAdmin(admin.ModelAdmin):
+    list_display = ['get_status', 'timestamp', 'get_player_name', 'text']
+
+    @admin.display(description='Status')
+    def get_status(self, obj):
+        if obj.active:
+            return 'Active'
+        return 'Solved'
+
+    @admin.display(description='Player')
+    def get_player_name(self, obj):
+        return obj.profile.user.username
 
 
 admin.site.unregister(Group)

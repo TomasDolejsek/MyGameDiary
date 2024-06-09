@@ -112,7 +112,7 @@ def get_game_data(game_id, url=api_url):
                  'name': data['name'],
                  'cover_url': get_game_cover_url(game_id),
                  'year': convert_to_year(data['first_release_date']),
-                 'rating': round(data['rating']),
+                 'rating': round(data['rating']) if data['rating'] is not None else None,
                  'summary': data['summary'],
                  'genres': data['genres'],
                  'perspectives': data['player_perspectives']}
@@ -128,6 +128,14 @@ def save_game(game_id, rewrite=False):
     game = Game()
     game.id = game_data['id']
     game.name = game_data['name']
+    if game.name.startswith('A '):
+        game.clean_name = game.name[2:]
+    elif game.name.startswith('An '):
+        game.clean_name = game.name[3:]
+    elif game.name.startswith('The '):
+        game.clean_name = game.name[4:]
+    else:
+        game.clean_name = game.name
     game.cover_url = game_data['cover_url']
     game.year = game_data['year']
     game.rating = game_data['rating']

@@ -24,7 +24,7 @@ class Perspective(models.Model):
 
 class GameQuerySet(models.QuerySet):
     def starts_with(self, query):
-        return self.filter(name__istartswith=query)
+        return self.filter(clear_name__istartswith=query)
 
 
 class GameManager(models.Manager):
@@ -37,6 +37,7 @@ class GameManager(models.Manager):
 
 class Game(models.Model):
     name = models.CharField(max_length=100)
+    clear_name = models.CharField(max_length=100, null=True, blank=True)
     cover_url = models.URLField()
     year = models.IntegerField()
     rating = models.PositiveIntegerField(null=True, blank=True)
@@ -47,22 +48,34 @@ class Game(models.Model):
     objects = GameManager()
 
     class Meta:
-        ordering = ['name', ]
+        ordering = ['clear_name', ]
 
     def __str__(self):
         return f"{self.name} ({self.year})"
 
     def get_genres_names(self):
         genres_names = []
-        for genre in self.genres.all():
+        genres = self.genres.all()
+        if not genres:
+            return '---'
+        for genre in genres:
             genres_names.append(genre.name)
         return ', '.join(genres_names)
 
     def get_perspectives_names(self):
         perspectives_names = []
-        for perspective in self.perspectives.all():
+        perspectives = self.perspectives.all()
+        if not perspectives:
+            return '---'
+        for perspective in perspectives:
             perspectives_names.append(perspective.name)
         return ', '.join(perspectives_names)
+
+    @property
+    def rating_text(self):
+        if self.rating is None:
+            return '---'
+        return f"{self.rating} / 100"
 
     @property
     def total_gamecards(self):

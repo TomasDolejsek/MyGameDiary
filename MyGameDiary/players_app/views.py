@@ -6,7 +6,8 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from players_app.mixins import (AnonymousRequiredMixin, ProfileOwnershipRequiredMixin, ProfileNotPrivateRequiredMixin,
-                                GameCardOwnershipRequiredMixin, GameCardNotPrivateRequiredMixin)
+                                GameCardOwnershipRequiredMixin, GameCardNotPrivateRequiredMixin, UserRightsMixin,
+                                LimitPendingRequestsMixin)
 
 from players_app.forms import PlayerRegistrationForm, PlayerAuthenticationForm, GameCardForm, RequestForm
 from players_app.models import GameCard, Profile, PlayerRequest
@@ -73,12 +74,12 @@ class PlayerRegisterView(AnonymousRequiredMixin, FormView):
         return redirect(reverse_lazy('players_app:user_register'))
 
 
-class PlayerRequestCreateView(LoginRequiredMixin, CreateView):
+class PlayerRequestCreateView(LoginRequiredMixin, LimitPendingRequestsMixin, CreateView):
     model = PlayerRequest
     template_name = 'request-create.html'
-    login_url = reverse_lazy('players_app:user_login')
-    context_object_name = 'player_request'
     form_class = RequestForm
+    login_url = reverse_lazy('players_app:user_login')
+    max_requests = 5
 
     def form_valid(self, form):
         instance = form.save(commit=False)
@@ -89,9 +90,59 @@ class PlayerRequestCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        query_count = PlayerRequest.objects.by_profile(profile=self.request.user.profile).still_active().count()
-        context['requests_remaining'] = 5 - query_count
+        query_count = PlayerRequest.objects.by_profile(profile=self.request.user.profile).pending().count()
+        context['requests_remaining'] = self.max_requests - query_count
         return context
+
+
+class PlayerRequestListView(LoginRequiredMixin, UserRightsMixin, ListView):
+    model = PlayerRequest
+    template_name = 'request-list.html'
+    context_object_name = 'player_requests'
+    login_url = reverse_lazy('players_app:user_login')
+    allowed_groups = ['Admin']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(self.get_context_rights())
+        context['display'] = self.request.GET.get('display')
+        return context
+
+    def get_queryset(self):
+        display = self.request.GET.get('display')
+        if display == 'active':
+            return PlayerRequest.objects.pending().order_by('-timestamp')
+        elif display == 'solved':
+            return PlayerRequest.objects.solved().order_by('-timestamp')
+        else:
+            return PlayerRequest.objects.all().order_by('-timestamp')
+
+
+class PlayerRequestSwitchView(LoginRequiredMixin, UserRightsMixin, RedirectView):
+    login_url = reverse_lazy('players_app:user_login')
+    allowed_groups = ['Admin']
+
+    def change_status(self, request_pk):
+        try:
+            request_to_change_status = PlayerRequest.objects.filter(pk=request_pk).first()
+            if request_to_change_status:
+                request_to_change_status.active = not request_to_change_status.active
+                request_to_change_status.save()
+                return True
+            else:
+                messages.error(self.request, f"Player Request was not found in our database.")
+        except ValueError:
+            messages.error(self.request, "Invalid Player Request ID.")
+        return False
+
+    def get_redirect_url(self, *args, **kwargs):
+        display = self.request.GET.get('display')
+        return reverse_lazy('players_app:request_list') + f'?display={display}'
+
+    def get(self, *args, **kwargs):
+        request_pk = self.kwargs.get('pk')
+        self.change_status(request_pk)
+        return super().get(*args, **kwargs)
 
 
 class ProfileView(LoginRequiredMixin, ProfileNotPrivateRequiredMixin, ListView):
@@ -121,9 +172,8 @@ class ProfileView(LoginRequiredMixin, ProfileNotPrivateRequiredMixin, ListView):
             self.profile = Profile.objects.filter(pk=self.profile_pk).first()
             if self.profile:
                 if display == 'all':
-                    return GameCard.objects.on_profile(profile=self.profile).order_by('game__name')
-                return (GameCard.objects.on_profile(profile=self.profile).starts_with(letter=display)
-                        .order_by('game__name'))
+                    return GameCard.objects.on_profile(profile=self.profile)
+                return GameCard.objects.on_profile(profile=self.profile).starts_with(letter=display)
             else:
                 messages.error(self.request, f"Profile was not found in our database.")
         except ValueError:
@@ -176,7 +226,7 @@ class ProfileListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        return Profile.objects.select_related('user').order_by('user__username')
+        return Profile.objects.select_related('user')
 
 
 class GameCardCreateView(LoginRequiredMixin, ProfileOwnershipRequiredMixin, RedirectView):

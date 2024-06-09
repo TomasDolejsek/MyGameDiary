@@ -45,3 +45,115 @@
 103298,Doom Eternal
 2211,Betrayal at Krondor
 281,Return to Castle Wolfenstein
+37,Dead Space
+38,Dead Space 2
+4754,Alien: Isolation
+6,Baldur's Gate II: Shadows of Amn
+8828,Betrayal in Antara
+8827,Return to Krondor
+1216,Dead Space 3
+2503,Dungeon Master II: The Legend of Skullkeep
+6328,Legend of Grimrock
+8456,Legend of Grimrock 2
+125,Diablo
+126,Diablo II
+73,Mass Effect
+74,Mass Effect 2
+75,Mass Effect 3
+7349,Mass Effect: Andromeda
+6825,Alien Trilogy
+602,Arx Fatalis
+50089,Ascendancy
+7407,Avadon: The Black Fortress
+612,Beneath a Steel Sky
+116634,Beyond a Steel Sky
+20,BioShock
+452,Blackthorne
+18489,Blair Witch Volume 1: Rustin Parr
+2214,BloodNet
+1150,Broken Sword: The Smoking Mirror
+2924,Broken Sword 5: The Serpent's Curse
+1151,Broken Sword: The Sleeping Dragon
+206502,Broken Sword: The Shadow of the Templars
+21127,Broken Sword: Shadow of the Templars - The Director's Cut
+133306,Call of the Sea
+99690,Congo the Movie: Descent into Zinj
+2369,Dark Messiah of Might and Magic
+296,Crysis
+471,Crysis 2
+1268,Crysis 3
+41,Deus Ex
+533,Dishonored
+11118,Dishonored 2
+13,Fallout
+14,Fallout 2
+15,Fallout 3
+16,Fallout: New Vegas
+9630,Fallout 4
+36707,The Fidelio Incident
+8789,Flight of the Amazon Queen
+2261,Gothic
+2262,Gothic II
+2263,Gothic 3
+3234,Arcania: Gothic 4
+7603,Hellblade: Senua's Sacrifice
+112874,Horizon Forbidden West
+39749,The House of Da Vinci
+753,Icewind Dale
+16730,J.U.L.I.A.: Among the Stars
+36254,The Keep
+11592,Lara Croft GO
+1331,Limbo
+1052,The Lord of the Rings: War in the North
+1830,Mars: War Logs
+495,Metro 2033
+3025,Middle-earth: Shadow of Mordor
+60,The Secret of Monkey Island
+61,Monkey Island 2: LeChuck's Revenge
+62,The Curse of Monkey Island
+63,Escape from Monkey Island
+64,Tales of Monkey Island
+2025,Mount & Blade: Warband
+114561,Nehrim: At Fate's Edge
+216,Neverwinter Nights
+2472,Prince of Persia
+2468,Prince of Persia: The Forgotten Sands
+16934,Prominence
+82015,The Quest
+11625,The Room
+11276,The Room Two
+18222,The Room Three
+27725,The Room: Old Sins
+157,Star Wars: Dark Forces
+150,Star Wars: Jedi Knight - Dark Forces II
+74701,Star Wars Jedi: Fallen Order
+201156,Star Wars Jedi: Survivor
+116,Star Wars: Knights of the Old Republic
+118,Star Wars: Knights of the Old Republic II - The Sith Lords
+114,Star Wars: The Old Republic
+30264,The Station
+6072,Styx: Master of Shadows
+13554,Styx: Shards of Darkness
+23,System Shock
+22,System Shock 2
+8413,The Terminator: Future Shock
+122611,Terminator: Resistance
+8311,Titan Quest
+912,Tomb Raider
+1163,Tomb Raider: Underworld
+1164,Tomb Raider
+7323,Rise of the Tomb Raider
+37777,Shadow of the Tomb Raider
+18311,The Turing Test
+7222,Two Worlds
+7223,Two Worlds II
+1318,XCOM: Enemy Unknown
+10919,XCOM 2
+9192,Wolfenstein: The Old Blood
+130,Warcraft II: Tides of Darkness
+24,X-COM: UFO Defense
+25,X-COM: Terror From the Deep
+80,The Witcher
+1942,The Witcher 3: Wild Hunt
+478,The Witcher 2: Assassins of Kings
+7331,Uncharted 4: A Thief's End

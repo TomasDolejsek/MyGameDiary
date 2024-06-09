@@ -12,7 +12,7 @@
                     </div>
                     <div class="d-flex w-100 justify-content-end mt-3 pe-4 me-4">
                          <input class="btn btn-warning rounded me-4 border border-white" type="submit" value="SEARCH">
-                        <a class="btn btn-primary rounded border border-white" href="{% url 'games_app:game_list' %}">CANCEL</a>
+                        <a class="btn btn-primary rounded border border-white" href="{% url 'games_app:game_list' %}?display=all">CANCEL</a>
                     </div>   
                 </form>
             {% else %}
@@ -21,7 +21,7 @@
                         <div class="d-flex mb-3">
                             <div class="text-uppercase fs-3 me-5">Results: {{ total_games }} Games Found</div>
                             <button class="btn btn-warning rounded border border-white me-4" type="submit"><b>Save Selected Game</b></button>
-                            <a class="btn btn-primary rounded border border-white" href="{% url 'games_app:game_list' %}"><b>Cancel</b></a>
+                            <a class="btn btn-primary rounded border border-white" href="{% url 'games_app:game_list' %}?display=all"><b>Cancel</b></a>
                         </div>
                         <div class="border border-white rounded w-100 fs-4 px-4 py-3">
                             <div class="row w-100 text-warning">

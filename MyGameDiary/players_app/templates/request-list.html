@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    {% if user_has_rights %}
+    <div class="d-flex w-100 flex-column justify-content-center align-items-center bg-dark mt-1 p-2 rounded">
+        <div class="w-100">
+            <div class="fs-2 text-warning text-uppercase text-center">
+                <b>Player's requests</b>
+            </div>
+            <div class="d-flex justify-content-start mt-2">
+                <a class="btn btn-primary border border-white"
+                   href="{% url 'players_app:request_list' %}?display=all">
+                   <b>SHOW ALL</b>
+                </a>
+                <a class="btn btn-danger border border-white mx-3"
+                   href="{% url 'players_app:request_list' %}?display=active">
+                   <b>SHOW ACTIVE</b>
+                </a>
+                <a class="btn btn-success border border-white"
+                   href="{% url 'players_app:request_list' %}?display=solved">
+                   <b>SHOW SOLVED</b>
+                </a>
+            </div>
+        </div>
+        <div class="w-100 fs-5 text-white border border-white rounded p-3 mt-2">
+            <div class="row w-100">
+                <div class="col-2">
+                    <b>Created</b>
+                </div>
+                <div class="col-2">
+                    <b>Player</b>
+                </div>
+                <div class="col-7">
+                    <b>Request</b>
+                </div>
+                <div class="col-1 text-center">
+                    <b>Status</b>
+                </div>
+            </div>
+            {% for player_request in player_requests %}
+                <hr class="text-white">
+                <div>
+                    <div class="row w-100">
+                        <div class="col-2">
+                            {{ player_request.timestamp.date }}
+                        </div>
+                        <div class="col-2">
+                            {{ player_request.profile.user.username }}
+                        </div>
+                        <div class="col-7">
+                            {{ player_request.text }}
+                        </div>
+                        {% if player_request.active %}
+                            <div class="col-1 text-danger">
+                                <a class="btn btn-danger ms-1 border border-white" 
+                                   href="{% url 'players_app:request_switch' player_request.pk %}?display={{ display }}">
+                                    <b>ACTIVE</b>
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="col-1 text-success">
+                                <a class="btn btn-success ms-1 border border-white" 
+                                   href="{% url 'players_app:request_switch' player_request.pk %}?display={{ display }}">
+                                    <b>SOLVED</b>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+        {% include 'snippets/access-denied.html' %}
+    {% endif %}
+{% endblock %}
