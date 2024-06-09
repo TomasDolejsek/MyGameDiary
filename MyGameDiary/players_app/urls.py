@@ -9,12 +9,15 @@ urlpatterns = [
     path('login/', PlayerLoginView.as_view(), name='user_login'),
     path('logout/', PlayerLogoutView.as_view(), name='user_logout'),
 
+    # PlayerRequest views
+    path('request-create/', PlayerRequestCreateView.as_view(), name='request_create'),
+
     # Profile views
     path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),
     path('profile-change-privacy/', ProfileChangePrivacyView.as_view(), name='profile_change_privacy'),
     path('profile-list/', ProfileListView.as_view(), name='profile_list'),
 
-    # Gamecard views
+    # GameCard views
     path('gamecard-create/', GameCardCreateView.as_view(), name='gamecard_create'),
     path('gamecard-detail/<int:pk>/', GameCardDetailView.as_view(), name='gamecard_detail'),
     path('gamecard-update/<int:pk>/', GameCardUpdateView.as_view(), name='gamecard_update'),

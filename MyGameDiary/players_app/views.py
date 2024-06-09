@@ -1,18 +1,19 @@
 from django.db import IntegrityError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView, RedirectView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import FormView, RedirectView, CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from players_app.mixins import (AnonymousRequiredMixin, ProfileOwnershipRequiredMixin, ProfileNotPrivateRequiredMixin,
                                 GameCardOwnershipRequiredMixin, GameCardNotPrivateRequiredMixin)
 
-from players_app.forms import PlayerRegistrationForm, PlayerAuthenticationForm, GameCardForm
-from players_app.models import GameCard, Profile
+from players_app.forms import PlayerRegistrationForm, PlayerAuthenticationForm, GameCardForm, RequestForm
+from players_app.models import GameCard, Profile, PlayerRequest
 from games_app.models import Game
 
 from django.db.models import Sum
+from string import ascii_lowercase
 
 
 class PlayerLoginView(AnonymousRequiredMixin, FormView):
@@ -72,6 +73,27 @@ class PlayerRegisterView(AnonymousRequiredMixin, FormView):
         return redirect(reverse_lazy('players_app:user_register'))
 
 
+class PlayerRequestCreateView(LoginRequiredMixin, CreateView):
+    model = PlayerRequest
+    template_name = 'request-create.html'
+    login_url = reverse_lazy('players_app:user_login')
+    context_object_name = 'player_request'
+    form_class = RequestForm
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.profile = self.request.user.profile
+        instance.save()
+        messages.success(self.request, "Request successfully created. Thank you!")
+        return redirect(reverse_lazy('homepage'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query_count = PlayerRequest.objects.by_profile(profile=self.request.user.profile).still_active().count()
+        context['requests_remaining'] = 5 - query_count
+        return context
+
+
 class ProfileView(LoginRequiredMixin, ProfileNotPrivateRequiredMixin, ListView):
     model = GameCard
     template_name = 'profile.html'
@@ -88,13 +110,20 @@ class ProfileView(LoginRequiredMixin, ProfileNotPrivateRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['profile'] = self.profile
         context['total_gamecards'] = GameCard.objects.on_profile(self.profile).count()
+
+        context['letters'] = ascii_lowercase
+        context['display'] = self.request.GET.get('display')
         return context
 
     def get_queryset(self):
+        display = self.request.GET.get('display')
         try:
             self.profile = Profile.objects.filter(pk=self.profile_pk).first()
             if self.profile:
-                return GameCard.objects.on_profile(profile=self.profile).order_by('game__name')
+                if display == 'all':
+                    return GameCard.objects.on_profile(profile=self.profile).order_by('game__name')
+                return (GameCard.objects.on_profile(profile=self.profile).starts_with(letter=display)
+                        .order_by('game__name'))
             else:
                 messages.error(self.request, f"Profile was not found in our database.")
         except ValueError:
@@ -124,7 +153,7 @@ class ProfileChangePrivacyView(LoginRequiredMixin, ProfileOwnershipRequiredMixin
         return False
 
     def get_redirect_url(self, *args, **kwargs):
-        return reverse_lazy('players_app:profile', kwargs={'pk': self.profile_pk})
+        return reverse_lazy('players_app:profile', kwargs={'pk': self.profile_pk}) + '?display=all'
 
     def get(self, *args, **kwargs):
         self.change_privacy(self.profile_pk)
@@ -152,7 +181,6 @@ class ProfileListView(LoginRequiredMixin, ListView):
 
 class GameCardCreateView(LoginRequiredMixin, ProfileOwnershipRequiredMixin, RedirectView):
     login_url = reverse_lazy('players_app:user_login')
-    url = reverse_lazy('games_app:game_list')
     profile_pk = None
 
     def dispatch(self, *args, **kwargs):
@@ -175,6 +203,10 @@ class GameCardCreateView(LoginRequiredMixin, ProfileOwnershipRequiredMixin, Redi
         except IntegrityError:
             messages.error(self.request, f"This game is already in your portfolio.")
         return super().get(self.request, *args, **kwargs)
+
+    @staticmethod
+    def get_redirect_url(*args, **kwargs):
+        return reverse_lazy('games_app:game_list') + '?display=all'
 
 
 class GameCardDetailView(LoginRequiredMixin, GameCardNotPrivateRequiredMixin, DetailView):
@@ -224,7 +256,7 @@ class GameCardDeleteView(LoginRequiredMixin, GameCardOwnershipRequiredMixin, Del
         return super().post(*args, **kwargs)
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_lazy('players_app:profile', kwargs={'pk': self.request.user.profile.pk})
+        return reverse_lazy('players_app:profile', kwargs={'pk': self.request.user.profile.pk}) + '?display=all'
 
 
 class GameCardListByGameView(LoginRequiredMixin, ListView):
@@ -252,3 +284,4 @@ class GameCardListByGameView(LoginRequiredMixin, ListView):
         gamecard = GameCard.objects.about_game(game=self.game).on_profile(profile=self.request.user.profile).first()
         context['gamecard_pk'] = gamecard.pk if gamecard is not None else None
         return context
+

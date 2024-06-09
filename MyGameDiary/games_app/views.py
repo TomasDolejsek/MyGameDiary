@@ -12,6 +12,8 @@ from games_app.models import Game
 from players_app.models import GameCard
 from django.db.models import Sum
 
+from string import ascii_lowercase
+
 
 class GameAddView(LoginRequiredMixin, UserRightsMixin, TemplateView):
     model = Game
@@ -74,10 +76,10 @@ class GameSaveView(LoginRequiredMixin, UserRightsMixin, TemplateView):
                 messages.success(self.request, f"{game_title} successfully saved.")
             else:
                 messages.error(self.request, f"{game_title} is already in the database.")
-            return redirect(reverse_lazy('games_app:game_list'))
+            return redirect(reverse_lazy('games_app:game_list') + '?display=all')
         except MultiValueDictKeyError:
-            messages.error(self.request, "No Game Was Selected.")
-            return redirect(reverse_lazy('games_app:game_list'))
+            messages.error(self.request, "No game was selected.")
+            return redirect(reverse_lazy('games_app:game_list') + '?display=all')
 
 
 class GameListView(ListView):
@@ -104,7 +106,16 @@ class GameListView(ListView):
         context['total_finished'] = GameCard.objects.filter(is_finished=True).count()
         context['total_hours'] = GameCard.objects.aggregate(Sum('hours_played'))['hours_played__sum']
         context['games_data'] = games_data
+
+        context['letters'] = ascii_lowercase
+        context['display'] = self.request.GET.get('display')
         return context
+
+    def get_queryset(self):
+        display = self.request.GET.get('display')
+        if display == 'all':
+            return Game.objects.all()
+        return Game.objects.starts_with(letter=display).order_by('name')
 
 
 class GameDetailView(DetailView):

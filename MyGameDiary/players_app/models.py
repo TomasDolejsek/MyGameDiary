@@ -74,6 +74,9 @@ class GameCardQuerySet(models.QuerySet):
             return self.about_game(game=game).filter(profile__is_private=False)
         return GameCard.objects.none()
 
+    def starts_with(self, letter):
+        return self.filter(game__name__istartswith=letter)
+
 
 class GameCardManager(models.Manager):
     def get_queryset(self):
@@ -88,6 +91,9 @@ class GameCardManager(models.Manager):
     def on_public_profiles(self, game):
         return self.get_queryset().on_public_profiles(game)
 
+    def starts_with(self, letter):
+        return self.get_queryset().starts_with(letter)
+
 
 class GameCard(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -96,7 +102,7 @@ class GameCard(models.Model):
     hours_played = models.PositiveIntegerField(default=0)
     avatar_names = models.CharField(max_length=100, null=True, blank=True)
     review_link = models.URLField(null=True, blank=True)
-    notes = models.TextField(null=True, blank=True)
+    notes = models.TextField(max_length=1023, null=True, blank=True)
 
     objects = GameCardManager()
 
@@ -121,3 +127,40 @@ class GameCard(models.Model):
     def review_link_text(self):
         return self.review_link if self.review_link else '---'
 
+
+"""
+PlayerRequests Model
+"""
+
+
+class PlayerRequestQuerySet(models.QuerySet):
+    def by_profile(self, profile):
+        if profile is not None:
+            return self.filter(profile=profile)
+        return PlayerRequest.objects.none()
+
+    def still_active(self):
+        return self.filter(active=True)
+
+
+class PlayerRequestManager(models.Manager):
+    def get_queryset(self):
+        return PlayerRequestQuerySet(self.model, using=self._db)
+
+    def by_profile(self, profile):
+        return self.get_queryset().by_profile(profile)
+
+    def still_active(self):
+        return self.get_queryset().still_active()
+
+
+class PlayerRequest(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    text = models.TextField(max_length=1023, null=False, blank=False)
+    active = models.BooleanField(default=True)
+
+    objects = PlayerRequestManager()
+
+    def __str__(self):
+        return f"{self.profile.user.username} - ({self.timestamp})"

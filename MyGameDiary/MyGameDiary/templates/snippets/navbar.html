@@ -6,12 +6,21 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'games_app:game_list' %}">Game Database</a>
+                    <a class="nav-link text-white" href="{% url 'games_app:game_list' %}?display=all">Game Database</a>
                 </li>
                 {% if user.is_authenticated %}
                     <li>
                         <a class="nav-link text-white" href="{% url 'players_app:profile_list' %}">Our Players</a>
                     </li>
+                    {% if not user.profile.is_admin %}
+                        <li>
+                            <a class="nav-link text-white" href="{% url 'players_app:request_create' %}">Make a Request</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a class="nav-link text-warning" href="{% url 'players_app:request_create' %}">View Requests</a>
+                        </li>
+                    {% endif %}    
                 {% endif %}
                 {% if user.profile.is_admin %}
                     <li>
@@ -37,7 +46,7 @@
                         {{ user }}
                     </span>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'players_app:profile' user.profile.pk %}">My Games</a>
+                        <a class="nav-link text-white" href="{% url 'players_app:profile' user.profile.pk %}?display=all">My Games</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'players_app:user_logout' %}">Logout</a>

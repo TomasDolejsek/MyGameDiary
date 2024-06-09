@@ -1,0 +1,20 @@
+<!-- Profile Letter Picker -->
+<div class="d-flex w-100 justify-content-between text-white align-items-center bg-dark p-2 rounded mt-1">
+    {% if display == 'all' %}
+        <a class="btn btn-warning text-uppercase fs-5 p-0 rounded"
+           style="width: 5%;" href="{% url 'players_app:profile' profile.pk %}?display=all"><b>all</b></a>
+    {% else %}
+        <a class="btn btn-white border border-white text-white text-uppercase fs-5 p-0 rounded"
+           style="width: 5%;" href="{% url 'players_app:profile' profile.pk %}?display=all">all</a>
+    {% endif %}
+    
+    {% for letter in letters %}
+        {% if display == letter %}
+            <a class="btn btn-warning text-uppercase fs-5 p-0 rounded"
+               style="width: 3%;" href="{% url 'players_app:profile' profile.pk %}?display={{ letter }}"><b>{{ letter }}</b></a>
+        {% else %}
+            <a class="btn btn-white border border-white text-white text-uppercase fs-5 p-0 rounded"
+               style="width: 3%;" href="{% url 'players_app:profile' profile.pk %}?display={{ letter }}">{{ letter }}</a>
+        {% endif %}
+    {% endfor %}
+</div>

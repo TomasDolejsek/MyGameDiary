@@ -2,7 +2,7 @@ from django.forms import ModelForm, CheckboxInput, Textarea, TextInput, NumberIn
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import Group, User
 
-from players_app.models import Profile, GameCard
+from players_app.models import Profile, GameCard, PlayerRequest
 
 
 class PlayerRegistrationForm(UserCreationForm):
@@ -102,4 +102,18 @@ class GameCardForm(ModelForm):
                     'placeholder': 'A Link to Your Review, e.g. on Steam',
                     'class': "form-control",
                 })
+        }
+
+
+class RequestForm(ModelForm):
+    class Meta:
+        model = PlayerRequest
+        fields = ['text']
+
+        widgets = {
+            'text': Textarea(attrs={
+                'style': 'width: 100%; height: 100px;',
+                'placeholder': 'Your Request',
+                'class': 'form-control',
+            }),
         }

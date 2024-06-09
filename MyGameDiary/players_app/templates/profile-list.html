@@ -16,11 +16,11 @@
                 </div>
                 {% if not profile.is_private %}
                     <a class="d-flex text-uppercase text-white fs-5" style="width: 30%;"
-                       href="{% url 'players_app:profile' profile.pk%}">
+                       href="{% url 'players_app:profile' profile.pk%}?display=all">
                         {{ profile.user.username }}
                     </a>
                 {% else %}
-                    <div class="d-flex text-uppercase text-white fs-5" style="width: 31%;">
+                    <div class="d-flex text-uppercase text-white fs-5" style="width: 30%;">
                         {{ profile.user.username }}
                     </div>   
                 {% endif %}
@@ -48,7 +48,7 @@
                 </div>
             {% if not profile.is_private or user.profile.is_admin %}
             <div class="d-flex justify-content-center" style="width: 25%;">
-                <a class="btn btn-primary border border-white" href="{% url 'players_app:profile' profile.pk %}"><b>Peek at Profile</b></a>
+                <a class="btn btn-primary border border-white" href="{% url 'players_app:profile' profile.pk %}?display=all"><b>Peek at Profile</b></a>
             </div>
             {% else %}
             <div style="width: 25%;"></div>   

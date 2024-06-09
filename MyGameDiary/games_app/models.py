@@ -22,6 +22,19 @@ class Perspective(models.Model):
         return self.name
 
 
+class GameQuerySet(models.QuerySet):
+    def starts_with(self, query):
+        return self.filter(name__istartswith=query)
+
+
+class GameManager(models.Manager):
+    def get_queryset(self):
+        return GameQuerySet(self.model, using=self._db)
+
+    def starts_with(self, letter):
+        return self.get_queryset().starts_with(letter)
+
+
 class Game(models.Model):
     name = models.CharField(max_length=100)
     cover_url = models.URLField()
@@ -30,6 +43,8 @@ class Game(models.Model):
     summary = models.TextField(null=True, blank=True)
     genres = models.ManyToManyField(Genre)
     perspectives = models.ManyToManyField(Perspective)
+
+    objects = GameManager()
 
     class Meta:
         ordering = ['name', ]

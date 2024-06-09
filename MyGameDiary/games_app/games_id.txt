@@ -40,3 +40,8 @@
 2155,Dark Souls
 11800,Divinity: Original Sin II
 5082,Divinity: Original Sin
+312,Doom II: Hell on Earth
+7351,Doom
+103298,Doom Eternal
+2211,Betrayal at Krondor
+281,Return to Castle Wolfenstein
