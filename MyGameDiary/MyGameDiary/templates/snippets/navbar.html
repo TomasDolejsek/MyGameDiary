@@ -1,9 +1,13 @@
 <style>
     li {margin-left: 2em;}
 </style>
-    <nav class="navbar w-100 fs-5 navbar-expand-lg navbar-dark ps-2 bg-dark rounded">
+    <nav class="navbar w-100 fs-5 navbar-expand-md navbar-dark ps-2 bg-dark rounded">
         <a class="navbar-brand fs-4 text-white" href="{% url 'homepage' %}">MY GAME DIARY</a>
-        <div class="collapse navbar-collapse">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#myNavbar"
+                aria-controls="myNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'games_app:game_list' %}?display=all">Game Database</a>
@@ -29,7 +33,7 @@
                 {% endif %}
             </ul>
         </div>
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="navbar-nav ms-auto">
                 {% if not user.is_authenticated %}
                     <li class="nav-item">

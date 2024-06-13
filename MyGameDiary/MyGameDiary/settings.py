@@ -24,11 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#yahzh_%#!^+unh!8lzk!r2@!vtikspf+wy5r_nwu=vt1*r!%@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['mygamediary.cz',
-                 '185.50.230.200',
-]
+                 'localhost',
+                 ]
+
+# CSRF_TRUSTED_ORIGINS = ['https://mygamediary.cz']
 
 
 # Application definition

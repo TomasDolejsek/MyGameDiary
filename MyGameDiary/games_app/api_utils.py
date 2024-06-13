@@ -129,13 +129,13 @@ def save_game(game_id, rewrite=False):
     game.id = game_data['id']
     game.name = game_data['name']
     if game.name.startswith('A '):
-        game.clean_name = game.name[2:]
+        game.clear_name = game.name[2:]
     elif game.name.startswith('An '):
-        game.clean_name = game.name[3:]
+        game.clear_name = game.name[3:]
     elif game.name.startswith('The '):
-        game.clean_name = game.name[4:]
+        game.clear_name = game.name[4:]
     else:
-        game.clean_name = game.name
+        game.clear_name = game.name
     game.cover_url = game_data['cover_url']
     game.year = game_data['year']
     game.rating = game_data['rating']

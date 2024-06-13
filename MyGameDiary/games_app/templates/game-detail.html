@@ -4,9 +4,9 @@
 {% block content %}
     <div class="d-flex flex-column justify-content-center w-100 bg-dark mt-1 p-2 rounded">
         <div class="d-flex w-100 justify-content-start p-3 border border-white rounded">
-            <div class="d-flex w-100 justify-content-center">
-                <div class="d-flex flex-column justify-content-center align-items-center"
-                     style="width: 26%;">
+            <div class="d-flex w-100 justify-content-start">
+                <div class="d-flex flex-column justify-content-start align-items-center"
+                     style="width: 30%;">
                     <img src="{{  game.cover_url }}" alt="{{ game.name }} cover" width="200" height="200"
                          class="border border-white border-2 rounded-3">
                     {% if user.is_authenticated %}
@@ -23,7 +23,7 @@
                     </div>
                     {% endif %}
                 </div>
-                <div class="flex flex-column fs-3 text-white" style="width: 74%;">
+                <div class="flex flex-column fs-3 text-white" style="width: 70%;">
                     <div class="fs-1 text-uppercase ms-2">
                         {{ game.name }}
                     </div>

@@ -157,3 +157,5 @@
 1942,The Witcher 3: Wild Hunt
 478,The Witcher 2: Assassins of Kings
 7331,Uncharted 4: A Thief's End
+836,Prince of Persia: The Sands of Time
+333,Quake
