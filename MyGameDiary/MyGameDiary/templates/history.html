@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <div class="d-flex w-100 flex-column justify-content-center align-items-center bg-dark mt-1 p-2 rounded">
+        <div class="w-100">
+            <div class="fs-2 text-warning text-uppercase text-center">
+                <b>Our Website History</b>
+            </div>
+        </div>
+        <div class="w-100 fs-5 text-white border border-white rounded p-3 mt-2">
+            <div class="row w-100">
+                <div class="col-2">
+                    <b>Date</b>
+                </div>
+                <div class="col-2">
+                    <b>Version</b>
+                </div>
+                <div class="col-5">
+                    <b>Description</b>
+                </div>
+                <div class="col-3">
+                    <b>What's New</b>
+                </div>
+            </div>
+            {% for version in versions %}
+                <hr class="text-white">
+                <div>
+                    <div class="row w-100">
+                        <div class="col-2">
+                            {{ version.date }}
+                        </div>
+                        <div class="col-2">
+                            {{ version.name }}
+                        </div>
+                        <div class="col-5">
+                            {{ version.description }}
+                        </div>
+                        <div class="col-3">
+                            {{ version.news }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

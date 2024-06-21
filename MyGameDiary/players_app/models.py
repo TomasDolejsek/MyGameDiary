@@ -174,3 +174,16 @@ class PlayerRequest(models.Model):
 
     def __str__(self):
         return f"{self.profile.user.username} - ({self.timestamp})"
+
+
+class Version(models.Model):
+    name = models.CharField(max_length=31)
+    date = models.DateField(default=datetime.today)
+    description = models.TextField()
+    news = models.TextField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"{self.name} ({self.date}) - {self.description}"

@@ -1,8 +1,9 @@
-from django.forms import ModelForm, CheckboxInput, Textarea, TextInput, NumberInput, CharField, PasswordInput
+from django.forms import (ModelForm, CheckboxInput, Textarea, TextInput, NumberInput, CharField, PasswordInput,
+                          DateInput)
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import Group, User
 
-from players_app.models import Profile, GameCard, PlayerRequest
+from players_app.models import Profile, GameCard, PlayerRequest, Version
 
 
 class PlayerRegistrationForm(UserCreationForm):
@@ -114,6 +115,32 @@ class RequestForm(ModelForm):
             'text': Textarea(attrs={
                 'style': 'width: 100%; height: 100px;',
                 'placeholder': 'Your Request',
+                'class': 'form-control',
+            }),
+        }
+
+
+class History(ModelForm):
+    class Meta:
+        model = Version
+        fields = ['date', 'name', 'description']
+
+        widgets = {
+            'date': DateInput(attrs={
+                'style': 'width: 30px; height: 30px;',
+                'placeholder': 'yyyy-mm-dd',
+                'class': 'form-control',
+            }),
+
+            'name': TextInput(attrs={
+                'style': 'width: 30px; height: 30px;',
+                'placeholder': 'vX.X',
+                'class': 'form-control',
+            }),
+
+            'description': Textarea(attrs={
+                'style': 'width: 100%; height: 100px;',
+                'placeholder': 'Description',
                 'class': 'form-control',
             }),
         }

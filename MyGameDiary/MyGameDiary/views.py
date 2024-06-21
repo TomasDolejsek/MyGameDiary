@@ -1,11 +1,8 @@
 from django.contrib.auth.models import User
-from django.urls import reverse_lazy
-from django.views.generic import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView, ListView
 
 from games_app.models import Game
-from players_app.mixins import UserRightsMixin
-from players_app.models import GameCard
+from players_app.models import GameCard, Version
 
 
 class HomePageView(TemplateView):
@@ -19,12 +16,7 @@ class HomePageView(TemplateView):
         return context
 
 
-class SessionView(LoginRequiredMixin, UserRightsMixin, TemplateView):
-    template_name = 'session.html'
-    login_url = reverse_lazy('players_app:user_login')
-    allowed_groups = ['All']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(self.get_context_rights())
-        return context
+class HistoryPageView(ListView):
+    model = Version
+    template_name = 'history.html'
+    context_object_name = 'versions'

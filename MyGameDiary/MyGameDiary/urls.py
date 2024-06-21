@@ -16,13 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from MyGameDiary.views import HomePageView, SessionView
+from MyGameDiary.views import HomePageView, HistoryPageView
+
 
 urlpatterns = [
     # general views
-    path('admin/', admin.site.urls),
     path('', HomePageView.as_view(), name='homepage'),
-    path('session/', SessionView.as_view(), name='session_view'),
+    path('admin/', admin.site.urls, name='admin'),
+    path('history/', HistoryPageView.as_view(), name='history'),
 
     # apps views
     path('games/', include('games_app.urls', namespace='games_app')),

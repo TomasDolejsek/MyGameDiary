@@ -1,9 +1,5 @@
 <div class="d-flex w-100 bg-dark justify-content-between align-items-center text-white fs-4 rounded p-2 py-3 mt-1">
-     <div class="fs-4" style="width:33%;">(c) Tomáš Dolejšek 2024</div>
-     {% if not user.profile.is_admin %}
-        <a class="text-white text-center" style="width:33%; text-decoration: none;" href="#">What's New</a>
-     {% else %}
-        <a class="text-warning text-center" style="width:33%; text-decoration: none;" href="#">Edit History</a>
-     {% endif %}
+    <div class="fs-4" style="width:33%;">(c) Tomáš Dolejšek 2024</div>
+        <a class="text-white text-center" style="width:33%; text-decoration: none;" href="{% url 'history' %}">What's New</a>
     <div class="text-end" style="width:33%;">v1.2</div>
  </div>

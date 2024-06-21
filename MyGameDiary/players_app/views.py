@@ -334,4 +334,3 @@ class GameCardListByGameView(LoginRequiredMixin, ListView):
         gamecard = GameCard.objects.about_game(game=self.game).on_profile(profile=self.request.user.profile).first()
         context['gamecard_pk'] = gamecard.pk if gamecard is not None else None
         return context
-

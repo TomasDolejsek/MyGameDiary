@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from players_app.models import Profile, GameCard, PlayerRequest
+from players_app.models import Profile, GameCard, PlayerRequest, Version
 
 
 @admin.register(GameCard)
@@ -49,6 +49,12 @@ class PlayerRequestAdmin(admin.ModelAdmin):
         return obj.profile.user.username
 
 
+@admin.register(Version)
+class PlayerRequestAdmin(admin.ModelAdmin):
+    list_display = ['name', 'date', 'description']
+
+
+
 admin.site.unregister(Group)
 
 
@@ -63,3 +69,5 @@ class GroupAdmin(admin.ModelAdmin):
         else:
             members = '--All--'
         return members
+
+
