@@ -13,13 +13,13 @@
                 <div class="col-2">
                     <b>Date</b>
                 </div>
-                <div class="col-2">
+                <div class="col-1">
                     <b>Version</b>
                 </div>
                 <div class="col-5">
                     <b>Description</b>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <b>What's New</b>
                 </div>
             </div>
@@ -30,14 +30,18 @@
                         <div class="col-2">
                             {{ version.date }}
                         </div>
-                        <div class="col-2">
+                        <div class="col-1">
                             {{ version.name }}
                         </div>
                         <div class="col-5">
                             {{ version.description }}
                         </div>
-                        <div class="col-3">
-                            {{ version.news }}
+                        <div class="col-4">
+                            {% if version.news %}
+                                {% for line in version.news_lines %}
+                                    - {{ line }}<br>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>

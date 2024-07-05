@@ -60,8 +60,8 @@
                             Review Link:
                         </div>
                         <div class="col fs-4">
-                            {% if gamecard.review_link_url %}
-                                <a class="text-white fs-4" href="{{ gamecard.review_link_url }}" target="_blank">
+                            {% if gamecard.review_link %}
+                                <a class="text-white fs-4" href="{{ gamecard.review_link_text }}" target="_blank">
                                    {{ gamecard.profile.user.username }}'s Review</a>
                             {% else %}
                                 ---

@@ -187,3 +187,7 @@ class Version(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.date}) - {self.description}"
+
+    @property
+    def news_lines(self):
+        return self.news.split('-')[1:]
