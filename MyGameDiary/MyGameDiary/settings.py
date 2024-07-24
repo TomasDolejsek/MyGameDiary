@@ -27,10 +27,10 @@ SECRET_KEY = 'django-insecure-#yahzh_%#!^+unh!8lzk!r2@!vtikspf+wy5r_nwu=vt1*r!%@
 DEBUG = True
 
 ALLOWED_HOSTS = ['mygamediary.cz',
-                 'localhost'
+                 # 'localhost'
                  ]
 
-# CSRF_TRUSTED_ORIGINS = ['https://mygamediary.cz']
+CSRF_TRUSTED_ORIGINS = ['https://mygamediary.cz']
 
 
 # Application definition

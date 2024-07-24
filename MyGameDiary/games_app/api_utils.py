@@ -1,3 +1,7 @@
+"""
+A library of utilities for communicating with IGDB game database.
+"""
+
 import requests
 from dotenv import load_dotenv
 from os import getenv
@@ -20,6 +24,9 @@ api_url = 'https://api.igdb.com/v4/'
 
 
 def get_api_token():
+    """
+    Get new api_token from IGDB API (using Twitch authentication)
+    """
     url = 'https://id.twitch.tv/oauth2/token'
     data = {'client_id': client_id,
             'client_secret': client_secret,
@@ -30,6 +37,9 @@ def get_api_token():
 
 
 def get_genres(url=api_url):
+    """
+    Get list of all game genres
+    """
     endpoint = 'genres'
     headers = {'Client-ID': client_id,
                'Authorization': 'Bearer ' + access_token}
@@ -41,6 +51,9 @@ def get_genres(url=api_url):
 
 
 def save_genres():
+    """
+    Save genres to the database
+    """
     genres = get_genres()
     for genre in genres:
         id = genre['id']
@@ -51,6 +64,9 @@ def save_genres():
 
 
 def get_perspectives(url=api_url):
+    """
+    Get list of all game perspectives
+    """
     endpoint = 'player_perspectives'
     headers = {'Client-ID': client_id,
                'Authorization': 'Bearer ' + access_token}
@@ -62,6 +78,9 @@ def get_perspectives(url=api_url):
 
 
 def save_perspectives():
+    """
+    Save perspectives to the database
+    """
     perspectives = get_perspectives()
     for perspective in perspectives:
         id = perspective['id']
@@ -72,6 +91,9 @@ def save_perspectives():
 
 
 def find_game_id(name, url=api_url):
+    """
+    Find a game_id by name
+    """
     endpoint = 'games'
     headers = {'Client-ID': client_id,
                'Authorization': 'Bearer ' + access_token}
@@ -96,6 +118,9 @@ def find_game_id(name, url=api_url):
 
 
 def get_game_data(game_id, url=api_url):
+    """
+    Get relevant game data from IGDB API using game id
+    """
     endpoint = 'games'
     headers = {'Client-ID': client_id,
                'Authorization': 'Bearer ' + access_token}
@@ -120,6 +145,10 @@ def get_game_data(game_id, url=api_url):
 
 
 def save_game(game_id, rewrite=False):
+    """
+    First, check if game is not already in db, if so rewrite must be set to True to continue
+    Get game data from IGDB API using game id and save it to the database
+    """
     game_check = Game.objects.filter(pk=game_id).first()
     if game_check and not rewrite:
         print(f'{game_check} already exists in the database.')
@@ -153,6 +182,9 @@ def save_game(game_id, rewrite=False):
 
 
 def save_games(rewrite=False):
+    """
+    Save all games listed in games_id.txt
+    """
     count = 0
     with open('games_app/games_id.txt', 'r') as file:
         for game in file.readlines():
@@ -181,7 +213,15 @@ def get_game_cover_url(game_id, url=api_url):
 
 
 def convert_to_year(timestamp):
+    """
+    Convert timestamp to a year
+    """
     return time.gmtime(timestamp).tm_year
+
+
+"""
+Obsolete functions
+"""
 
 
 def get_collection(collection_id, url=api_url):
@@ -215,6 +255,3 @@ def get_platform_names(platforms_list, url=api_url):
     data = response.json()
     print(data)
     return data
-
-
-
