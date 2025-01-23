@@ -78,7 +78,7 @@ class GameCardQuerySet(models.QuerySet):
         return GameCard.objects.none()
 
     def starts_with(self, letter):
-        return self.filter(game__clear_name__istartswith=letter)
+        return self.filter(game__ordering_name__istartswith=letter)
 
 
 class GameCardManager(models.Manager):
@@ -110,7 +110,7 @@ class GameCard(models.Model):
     objects = GameCardManager()
 
     class Meta:
-        ordering = ['game__clear_name', ]
+        ordering = ['game__ordering_name', ]
         unique_together = (('profile', 'game'),)
 
     def __str__(self):

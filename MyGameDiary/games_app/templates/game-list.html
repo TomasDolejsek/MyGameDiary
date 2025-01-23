@@ -12,9 +12,17 @@
                          class="border rounded">
                 </a>
             </div>
-            <div class="text-white text-uppercase fs-5" style="width: 26%;">
-                <a class="text-white" href="{% url 'games_app:game_detail' game_data.game.pk %}">
-                   {{ game_data.game.name }}</a> ({{ game_data.game.year }})
+            <div class="text-white" style="width: 26%;">
+                <div class="text-uppercase fs-5">
+                    <a class="text-white" href="{% url 'games_app:game_detail' game_data.game.pk %}">
+                    {{ game_data.game.name }}</a> ({{ game_data.game.year }})
+                </div>
+                <div style="font-size: 18px;">
+                    {% if game_data.game.franchise %}
+                        Franchise: {{ game_data.game.franchise.name }}
+                    {% endif %}
+                </div>
+                
             </div>
             <div class="d-flex rounded justify-content-center align-items-center fs-4 text-white" style="width: 36%;">
                 <div class="d-flex w-100 fs-6 justify-content-around align-items-center text-center">

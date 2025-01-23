@@ -159,3 +159,30 @@
 7331,Uncharted 4: A Thief's End
 836,Prince of Persia: The Sands of Time
 333,Quake
+30208,Dragon Age: The Veilguard
+133004,Assassin's Creed Valhalla
+1970,Assassin's Creed IV Black Flag
+1164,Tomb Raider
+912,Tomb Raider
+1156,Tomb Raider II
+1157,Tomb Raider III: Adventures of Lara Croft
+1159,Tomb Raider: The Angel of Darkness
+312286,Tomb Raider: Anniversary
+1163,Tomb Raider: Underworld
+602,Arx Fatalis
+65824,Avernum 3: Ruined World
+19580,Avernum
+52,The Elder Scrolls: Arena
+1158,Tomb Raider: The Last Revelation
+1160,Tomb Raider: Chronicles
+7323,Rise of the Tomb Raider
+37777,Shadow of the Tomb Raider
+112874,Horizon Forbidden West
+312,Doom II: Hell on Earth
+5606,Assassin's Creed Unity
+7570,Assassin's Creed Rogue
+8263,Assassin's Creed Syndicate
+300976,Assassin's Creed Shadows
+28540,Assassin's Creed Origins
+103054,Assassin's Creed Odyssey
+215060,Assassin's Creed Mirage
