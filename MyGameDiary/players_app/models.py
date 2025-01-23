@@ -110,7 +110,7 @@ class GameCard(models.Model):
     objects = GameCardManager()
 
     class Meta:
-        ordering = ['game__ordering_name', ]
+        ordering = ['game__ordering_name', 'game__year', 'game__name']
         unique_together = (('profile', 'game'),)
 
     def __str__(self):

@@ -106,10 +106,11 @@ def find_game_id(name, url=api_url):
     for game in data:
         if 'first_release_date' not in game:
             continue
-        game_data = {}
-        game_data['id'] = game['id']
-        game_data['name'] = game['name']
-        game_data['year'] = convert_to_year(game['first_release_date'])
+        game_data = {
+            'id': game['id'],
+            'name': game['name'],
+            'year': convert_to_year(game['first_release_date'])
+        }
         games.append(game_data)
 
     for game in games:
@@ -245,6 +246,16 @@ def get_game_franchise_id(game_id, url=api_url):
     return franchise_id[0] if franchise_id else None
 
 
+def get_all_game_franchise_ids(game_id, url=api_url):
+    endpoint = 'games'
+    headers = {'Client-ID': client_id,
+               'Authorization': 'Bearer ' + access_token}
+    data = f'fields franchises; where id = {game_id};'
+    response = requests.post(url + endpoint, headers=headers, data=data)
+    franchise_ids = response.json()[0].get('franchises')
+    return franchise_ids if franchise_ids else None
+
+
 def get_franchise_name(franchise_id, url=api_url):
     endpoint = 'franchises'
     headers = {'Client-ID': client_id,
@@ -281,7 +292,7 @@ def convert_to_year(timestamp):
     return time.gmtime(timestamp).tm_year
 
 
-def find_and_save_games_franchise(update=False):
+def find_and_save_games_franchises(update=False):
     games = Game.objects.all()
     count = 0
     for game in games:
@@ -289,11 +300,11 @@ def find_and_save_games_franchise(update=False):
         if game.franchise is not None and not update:
             print(f"Franchise '{game.franchise_text}' already set for {game}. Skipping...")
             continue
-        count += 1
         franchise_id = get_game_franchise_id(game.id)
         if not franchise_id:
             game.franchise = None
         else:
+            count += 1
             game.franchise, created = Franchise.objects.get_or_create(
                 id=franchise_id,
                 name=get_franchise_name(franchise_id)
@@ -304,3 +315,32 @@ def find_and_save_games_franchise(update=False):
         game.save()
         print(f"Ordering_name '{game.ordering_name}' set for {game}.")
     print(f"Successfully saved {count} franchise{'s' if count != 1 else ''}.")
+
+
+def find_games_of_multiple_franchises():
+    games = Game.objects.all()
+    count = 0
+    for game in games:
+        print(f"Checking ALL '{game}' franchises...")
+        franchises = get_all_game_franchise_ids(game.id)
+        if not franchises:
+            print(f"No franchise found for '{game}'.")
+            continue
+        else:
+            if len(franchises) > 1:
+                count += 1
+            franchise_texts = []
+            for franchise_id in franchises:
+                franchise_texts.append(f"{franchise_id}: {get_franchise_name(franchise_id)}")
+            print(f"Franchises found for '{game}': {' '.join(franchise_texts)}")
+    print(f"Found {count} game{'s' if count != 1 else ''} with multiple franchises.")
+
+
+def check_franchise_exists(franchise_name, url=api_url):
+    endpoint = 'franchises'
+    headers = {'Client-ID': client_id,
+               'Authorization': 'Bearer ' + access_token}
+    data = f'fields id, name; where name = "{franchise_name}";'
+    response = requests.post(url + endpoint, headers=headers, data=data)
+    print(response.json())
+    return response.json()
