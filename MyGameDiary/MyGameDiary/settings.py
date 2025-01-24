@@ -131,8 +131,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_deployment')
-
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static_deployment')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'MyGameDiary', 'static'),

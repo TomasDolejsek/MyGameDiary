@@ -186,3 +186,11 @@
 28540,Assassin's Creed Origins
 103054,Assassin's Creed Odyssey
 215060,Assassin's Creed Mirage
+1266,Assassin's Creed III
+128,Assassin's Creed
+127,Assassin's Creed II
+221823,Assassin's Creed Brotherhood
+537,Assassin's Creed Revelations
+113,Assassin's Creed Brotherhood
+30208,Dragon Age: The Veilguard
+1162,Tomb Raider: Anniversary

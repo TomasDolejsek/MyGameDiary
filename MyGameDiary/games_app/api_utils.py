@@ -98,7 +98,6 @@ def find_game_id(name, url=api_url):
     headers = {'Client-ID': client_id,
                'Authorization': 'Bearer ' + access_token}
     data = f'fields id, name, first_release_date; search "{name}"; limit 100;'
-
     response = requests.post(url + endpoint, headers=headers, data=data)
     data = response.json()
 
@@ -111,10 +110,9 @@ def find_game_id(name, url=api_url):
             'name': game['name'],
             'year': convert_to_year(game['first_release_date'])
         }
+        print(f"id: {game_data['id']} - '{game_data['name']}' ({game_data['year']})")
         games.append(game_data)
 
-    for game in games:
-        print(f"id: {game['id']} - '{game['name']}' ({game['year']})")
     return games
 
 
@@ -125,22 +123,24 @@ def get_game_data(game_id, url=api_url):
     endpoint = 'games'
     headers = {'Client-ID': client_id,
                'Authorization': 'Bearer ' + access_token}
-    data = (f'fields id, name, cover, first_release_date, rating, summary, genres, player_perspectives; '
-            f'where id = {game_id};')
+    data = (f'fields id, name, cover, first_release_date, total_rating, summary, franchises, '
+            f'genres, player_perspectives; where id = {game_id};')
 
     response = requests.post(url + endpoint, headers=headers, data=data)
     data = response.json()[0]
+    if 'franchises' not in data:
+        data['franchises'] = []
     if 'player_perspectives' not in data:
         data['player_perspectives'] = []
-    if 'rating' not in data:
-        data['rating'] = None
+    if 'total_rating' not in data:
+        data['total_rating'] = None
     game_data = {'id': data['id'],
                  'name': data['name'],
                  'cover_url': get_game_cover_url(game_id),
                  'year': convert_to_year(data['first_release_date']),
-                 'rating': round(data['rating']) if data['rating'] is not None else None,
+                 'rating': round(data['total_rating']) if data['total_rating'] is not None else None,
                  'summary': data['summary'],
-                 'franchise_id': get_game_franchise_id(game_id),
+                 'franchise_id': data['franchises'][0] if data['franchises'] else None,
                  'genres': data['genres'],
                  'perspectives': data['player_perspectives']}
     return game_data
@@ -185,14 +185,13 @@ def save_game(game_id, rewrite=False):
     game.year = game_data['year']
     game.rating = game_data['rating']
     game.summary = game_data['summary']
+    franchise = None
     if game_data['franchise_id']:
         franchise, created = Franchise.objects.get_or_create(
             id=game_data['franchise_id'],
             name=get_franchise_name(game_data['franchise_id'])
         )
-        game.franchise = franchise
-    else:
-        game.franchise = None
+    game.franchise = franchise
     game.save()
     for genre in game_data['genres']:
         new_genre = Genre.objects.get(pk=genre)
@@ -244,16 +243,6 @@ def get_game_franchise_id(game_id, url=api_url):
     response = requests.post(url + endpoint, headers=headers, data=data)
     franchise_id = response.json()[0].get('franchises')
     return franchise_id[0] if franchise_id else None
-
-
-def get_all_game_franchise_ids(game_id, url=api_url):
-    endpoint = 'games'
-    headers = {'Client-ID': client_id,
-               'Authorization': 'Bearer ' + access_token}
-    data = f'fields franchises; where id = {game_id};'
-    response = requests.post(url + endpoint, headers=headers, data=data)
-    franchise_ids = response.json()[0].get('franchises')
-    return franchise_ids if franchise_ids else None
 
 
 def get_franchise_name(franchise_id, url=api_url):
@@ -317,30 +306,36 @@ def find_and_save_games_franchises(update=False):
     print(f"Successfully saved {count} franchise{'s' if count != 1 else ''}.")
 
 
-def find_games_of_multiple_franchises():
-    games = Game.objects.all()
-    count = 0
-    for game in games:
-        print(f"Checking ALL '{game}' franchises...")
-        franchises = get_all_game_franchise_ids(game.id)
-        if not franchises:
-            print(f"No franchise found for '{game}'.")
-            continue
-        else:
-            if len(franchises) > 1:
-                count += 1
-            franchise_texts = []
-            for franchise_id in franchises:
-                franchise_texts.append(f"{franchise_id}: {get_franchise_name(franchise_id)}")
-            print(f"Franchises found for '{game}': {' '.join(franchise_texts)}")
-    print(f"Found {count} game{'s' if count != 1 else ''} with multiple franchises.")
-
-
 def check_franchise_exists(franchise_name, url=api_url):
     endpoint = 'franchises'
     headers = {'Client-ID': client_id,
                'Authorization': 'Bearer ' + access_token}
     data = f'fields id, name; where name = "{franchise_name}";'
     response = requests.post(url + endpoint, headers=headers, data=data)
-    print(response.json())
-    return response.json()
+    exists = f"{response.json()[0].get('id')}: {franchise_name}" if response.json() \
+             else f"{franchise_name} franchise not found."
+    return exists
+
+
+def get_game_total_rating(game_id, url=api_url):
+    endpoint = 'games'
+    headers = {'Client-ID': client_id,
+               'Authorization': 'Bearer ' + access_token}
+    data = f'fields total_rating; where id = {game_id};'
+    response = requests.post(url + endpoint, headers=headers, data=data)
+    total_rating = response.json()[0].get('total_rating')
+    return round(total_rating) if total_rating else None
+
+
+def update_ratings():
+    games = Game.objects.all()
+    count = 0
+    for game in games:
+        old_rating = game.rating
+        new_rating = get_game_total_rating(game.id)
+        if new_rating != old_rating:
+            count += 1
+            game.rating = new_rating
+            game.save()
+            print(f"Rating for {game} has been updated. {old_rating} -> {new_rating}")
+    print(f"Successfully updated {count} rating{'s' if count != 1 else ''}.")

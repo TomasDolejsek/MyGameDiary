@@ -3,9 +3,9 @@
 
 {% block content %}
     {% include 'snippets/profile-header.html' %}
-    {% include 'snippets/profile-lp.html' %}
+    {% include 'snippets/game-search-field.html' %}
     {% for gamecard in gamecards %}
-        <div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 mt-1 rounded">
+        <div class="game d-flex w-100 justify-content-start align-items-center bg-dark p-2 mt-1 rounded">
             <div style="width: 8%;">
                 <a href="{% url 'games_app:game_detail' gamecard.game.pk %}">
                     <img src="{{  gamecard.game.cover_url }}" alt="{{ gamecard.game.name }} cover" width="100" height="100"
@@ -14,10 +14,10 @@
             </div>
             <div class="text-white" style="width: 32%;">
                 <div class="text-uppercase fs-5">
-                    <a class="text-white" href="{% url 'games_app:game_detail' gamecard.game.pk %}">
-                    {{ gamecard.game.name }}</a> ({{ gamecard.game.year }})
+                    <a class="highlight text-white" href="{% url 'games_app:game_detail' gamecard.game.pk %}">
+                        {{ gamecard.game.name }}</a> <span class="highlight text-white">({{ gamecard.game.year }})</span>
                 </div>
-                <div style="font-size: 18px;">
+                <div class="highlight text-white" style="font-size: 16px;">
                     {% if gamecard.game.franchise %}
                         Franchise: {{ gamecard.game.franchise.name }}
                     {% endif %}

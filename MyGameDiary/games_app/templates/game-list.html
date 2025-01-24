@@ -3,9 +3,9 @@
 
 {% block content %}
     {% include 'snippets/game-list-header.html' %}
-    {% include 'snippets/game-list-lp.html' %}
+    {% include 'snippets/game-search-field.html' %}
     {% for game_data in games_data %}
-        <div class="d-flex w-100 justify-content-start align-items-center bg-dark p-2 mt-1 rounded">
+        <div class="game d-flex w-100 justify-content-start align-items-center bg-dark p-2 mt-1 rounded">
             <div style="width: 8%;">
                 <a href="{% url 'games_app:game_detail' game_data.game.pk %}">
                     <img src="{{  game_data.game.cover_url }}" alt="{{ game_data.game.name }} cover" width="90%" height="90%"
@@ -14,10 +14,10 @@
             </div>
             <div class="text-white" style="width: 26%;">
                 <div class="text-uppercase fs-5">
-                    <a class="text-white" href="{% url 'games_app:game_detail' game_data.game.pk %}">
-                    {{ game_data.game.name }}</a> ({{ game_data.game.year }})
+                    <a class="highlight text-white" href="{% url 'games_app:game_detail' game_data.game.pk %}">
+                    {{ game_data.game.name }}</a> <span class="highlight text-white">({{ game_data.game.year }})</span>
                 </div>
-                <div style="font-size: 18px;">
+                <div class="highlight text-white" style="font-size: 16px;">
                     {% if game_data.game.franchise %}
                         Franchise: {{ game_data.game.franchise.name }}
                     {% endif %}
