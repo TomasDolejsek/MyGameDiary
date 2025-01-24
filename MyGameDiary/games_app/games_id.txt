@@ -194,3 +194,5 @@
 113,Assassin's Creed Brotherhood
 30208,Dragon Age: The Veilguard
 1162,Tomb Raider: Anniversary
+616,Circle of Blood
+1152,Secrets of the Ark: A Broken Sword Game
