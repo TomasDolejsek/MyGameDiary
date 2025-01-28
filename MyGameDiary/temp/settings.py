@@ -24,11 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#yahzh_%#!^+unh!8lzk!r2@!vtikspf+wy5r_nwu=vt1*r!%@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['mygamediary.cz',
-                 'localhost',
-                 ]
+                 '185.50.230.200',
+]
 
 CSRF_TRUSTED_ORIGINS = ['https://mygamediary.cz']
 
@@ -133,6 +133,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_deployment')
+
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'MyGameDiary', 'static'),

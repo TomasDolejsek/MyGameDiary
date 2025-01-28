@@ -1,0 +1,42 @@
+{% extends 'base-editor.html' %}
+{% load bootstrap5 %}
+{% load static %}
+
+
+{% block content %}
+<div class="d-flex w-100 justify-content-start align-items-center py-1">
+    <a href="{% url 'editor:new_template' %}" class="btn btn-success round border border-white fw-bold">Vytvořit nový template</a>
+</div>
+<div class="d-flex w-100 flex-column justify-content-center bg-white rounded">
+    <div class="d-flex p-1 fs-6 fw-bold text-white align-items-center rounded justify-content-start bg-primary">
+        <div class="col-2">
+            Poslední změna
+        </div>
+        <div class="col-3">
+            Název templatu
+        </div>
+        <div class="col-4">
+            Popis
+        </div>
+        <div class="col-2">
+            Akce
+        </div>
+    </div>
+    {% for template in templates %}
+        <div class="d-flex justify-content-start align-items-center fs-6 p-1 fw-normal">
+            <div class="col-2">
+                {{ template.updated_at }}
+            </div>
+            <div class="col-3">
+                {{ template.name }}
+            </div>
+            <div class="col-4">
+                {{ template.description }}
+            </div>
+            <div class="col-2">
+                <a class="btn bg-warning border border-1 border-dark" href="{% url 'editor:edit_template' template.pk %}">Editovat</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

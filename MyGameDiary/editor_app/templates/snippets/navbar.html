@@ -1,0 +1,61 @@
+<style>
+    li {margin-left: 2em;}
+</style>
+    <nav class="navbar w-100 fs-5 navbar-expand-md navbar-dark ps-2 bg-dark rounded">
+        <a class="navbar-brand fs-4 text-white" href="{% url 'homepage' %}">MY GAME DIARY</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#myNavbar"
+                aria-controls="myNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'games_app:game_list' %}?display=all">Game Database</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li>
+                        <a class="nav-link text-white" href="{% url 'players_app:profile_list' %}">Our Players</a>
+                    </li>
+                    {% if not user.profile.is_admin %}
+                        <li>
+                            <a class="nav-link text-white" href="{% url 'players_app:request_create' %}">Make a Request</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a class="nav-link text-warning" href="{% url 'players_app:request_list' %}?display=active">View Requests</a>
+                        </li>
+                    {% endif %}    
+                {% endif %}
+                {% if user.profile.is_admin %}
+                    <li>
+                        <a class="nav-link text-warning" href="{% url 'games_app:game_add' %}">Add a New Game</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="navbar-nav ms-auto">
+                {% if not user.is_authenticated %}
+                    <li class="nav-item">
+                       <a class="nav-link text-white" href="{% url 'players_app:user_login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                       <a class="nav-link text-white" href="{% url 'players_app:user_register' %}">Register</a>
+                    </li>
+                {% else %}
+                    <div class="d-flex align-items-center">
+                    {% include 'snippets/profile-logo-navbar.html' %}
+                    </div>
+                    <span class="navbar-text text-white">
+                        {{ user }}
+                    </span>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'players_app:profile' user.profile.pk %}?display=all">My Games</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'players_app:user_logout' %}">Logout</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
